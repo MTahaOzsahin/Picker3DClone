@@ -14,9 +14,12 @@ namespace Controllers.PlayerController
 
         private Vector3 previousInputPosition;
 
+        private Rigidbody mRigidbody;
+
         private void Awake()
         {
             mainCamera = Camera.main;
+            mRigidbody = GetComponent<Rigidbody>();
         }
 
 
@@ -39,7 +42,7 @@ namespace Controllers.PlayerController
         private void PlayerZAxisMovement()
         {
             if (!isPlayerInputSubmit) return;
-            transform.Translate(0f, 0, Time.deltaTime * playerZMovementSpeed);
+            mRigidbody.velocity = new Vector3(0f, 0, Time.fixedDeltaTime * playerZMovementSpeed * 10f);
         }
         
         private void PlayerXAxisMovement()
@@ -54,7 +57,7 @@ namespace Controllers.PlayerController
                 var differenceAlongXAxis = inputPositionInWorldScreenPoint.x - previousInputPositionWorldScreenPoint.x;
                 
                 var targetPosition = new Vector3(transform.position.x + differenceAlongXAxis,transformPosition.y,transformPosition.z);
-                transform.position = targetPosition;
+                mRigidbody.MovePosition(targetPosition);
             }
             previousInputPosition = Input.mousePosition;
         }

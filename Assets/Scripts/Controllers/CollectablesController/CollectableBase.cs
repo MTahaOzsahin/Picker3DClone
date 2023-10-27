@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Controllers.CollectablesController
@@ -12,5 +13,15 @@ namespace Controllers.CollectablesController
     {
         public bool IsActive;
         public CollectableType SelectedCollectableType;
+
+        private void OnEnable()
+        {
+            IsActive = true;
+        }
+
+        private void OnDisable()
+        {
+            IsActive = false;
+        }
     }
 }
