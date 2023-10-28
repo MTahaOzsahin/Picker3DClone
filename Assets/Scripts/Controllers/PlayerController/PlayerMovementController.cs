@@ -1,24 +1,18 @@
-using System;
 using UnityEngine;
 
 namespace Controllers.PlayerController
 {
     public class PlayerMovementController : MonoBehaviour
     {
-        [Header("Player Movement Speed")]
+        [Header("Player Movement Speed"),Range(0.01f,0.5f)]
         [SerializeField] private float playerZMovementSpeed;
-        
-        [SerializeField] private bool isPlayerInputSubmit;
-        
+
         [Header("Player X Axis Lerp value"),Range(0.1f,1f)]
         [SerializeField] private float lerpValue;
-
+        
         private bool isMouseDragging;
         
         private Camera mainCamera;
-
-        private Vector3 previousInputPosition;
-
         private Rigidbody mRigidbody;
 
         private void Awake()
@@ -26,18 +20,10 @@ namespace Controllers.PlayerController
             mainCamera = Camera.main;
             mRigidbody = GetComponent<Rigidbody>();
         }
-
-
+        
         private void FixedUpdate()
         {
-            PlayerZAxisMovement();
-            PlayerXAxisMovement();
-        }
-        
-        private void OnMouseDown()
-        {
-            // isPlayerInputSubmit = true;
-            previousInputPosition = Input.mousePosition;
+            PlayerMovement();
         }
 
         private void OnMouseUp()
@@ -50,27 +36,33 @@ namespace Controllers.PlayerController
             isMouseDragging = true;
         }
 
-        private void PlayerZAxisMovement()
+        private void PlayerMovement()
         {
-            if (!isPlayerInputSubmit) return;
-            mRigidbody.velocity = new Vector3(0f, 0, Time.fixedDeltaTime * playerZMovementSpeed * 10f);
-        }
-        
-        private void PlayerXAxisMovement()
-        {
-            if(!isMouseDragging) return;
             var inputPosition = Input.mousePosition;
             var transformPosition = transform.position;
-            if (Mathf.Abs(inputPosition.x - previousInputPosition.x) > 0.5f)
+            if (isMouseDragging)
             {
                 var distanceToScreen = mainCamera.WorldToScreenPoint(transformPosition).z;
                 var inputPositionInWorldScreenPoint = mainCamera.ScreenToWorldPoint(new Vector3(inputPosition.x, 0f, distanceToScreen));
-                var targetPosition = new Vector3(inputPositionInWorldScreenPoint.x, transformPosition.y,
-                    transformPosition.z);
-                var smoothTargetPosition = Vector3.Lerp(transformPosition, targetPosition, lerpValue);
-                mRigidbody.MovePosition(smoothTargetPosition);
+                var targetXPosition = new Vector3(inputPositionInWorldScreenPoint.x, transformPosition.y, transformPosition.z);
+                var smoothXTargetPosition = Vector3.Lerp(transformPosition, targetXPosition, lerpValue);
+                
+                var targetZPosition = new Vector3(transformPosition.x, transformPosition.y, transformPosition.z + playerZMovementSpeed);
+                var smoothTargetZPosition = Vector3.Lerp(transformPosition, targetZPosition, lerpValue);
+
+                var targetPosition = new Vector3(smoothXTargetPosition.x, transformPosition.y, smoothTargetZPosition.z);
+                
+                mRigidbody.MovePosition(targetPosition);
             }
-            previousInputPosition = Input.mousePosition;
+            else
+            {
+                var targetZPosition = new Vector3(transformPosition.x, transformPosition.y, transformPosition.z + playerZMovementSpeed);
+                var smoothTargetZPosition = Vector3.Lerp(transformPosition, targetZPosition, lerpValue);
+
+                var targetPosition = new Vector3(transformPosition.x, transformPosition.y, smoothTargetZPosition.z);
+                
+                mRigidbody.MovePosition(targetPosition);
+            }
         }
     }
 }

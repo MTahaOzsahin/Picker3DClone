@@ -21,7 +21,7 @@ namespace Helpers
             pooledGameObjectsList = new List<GameObject>();
             for (int i = 0; i < targetQuantityForCollectables; i++)
             {
-                var randomIndex = Random.Range(1, prefabsToPooled.Count);
+                var randomIndex = Random.Range(0, prefabsToPooled.Count);
                 var tempGameObject = Instantiate(prefabsToPooled[randomIndex]);
                 tempGameObject.SetActive(false);
                 var gameObjectType = tempGameObject.GetComponent<CollectableBase>().SelectedCollectableType;
