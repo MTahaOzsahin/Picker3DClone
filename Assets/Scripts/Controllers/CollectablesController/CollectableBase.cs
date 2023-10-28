@@ -11,17 +11,18 @@ namespace Controllers.CollectablesController
     }
     public class CollectableBase : MonoBehaviour
     {
-        public bool IsActive;
-        public CollectableType SelectedCollectableType;
+        public CollectableType selectedCollectableType;
 
-        private void OnEnable()
+        private Rigidbody mRigidbody;
+
+        private void Awake()
         {
-            IsActive = true;
+            mRigidbody = GetComponent<Rigidbody>();
         }
 
-        private void OnDisable()
+        public void PushCollectablesToTarget()
         {
-            IsActive = false;
+            mRigidbody.AddForce(Vector3.forward * 50f);
         }
     }
 }

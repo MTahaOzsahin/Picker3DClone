@@ -16,7 +16,7 @@ GameObject:
   - component: {fileID: 5043960944161398725}
   m_Layer: 0
   m_Name: CollectableCube
-  m_TagString: Untagged
+  m_TagString: Collectables
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -109,7 +109,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cec58045dad0ce94997997fb7fa1fed5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsActive: 0
   SelectedCollectableType: 1
 --- !u!54 &5043960944161398725
 Rigidbody:

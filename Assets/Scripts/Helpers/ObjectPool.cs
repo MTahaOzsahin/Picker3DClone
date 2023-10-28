@@ -24,7 +24,7 @@ namespace Helpers
                 var randomIndex = Random.Range(0, prefabsToPooled.Count);
                 var tempGameObject = Instantiate(prefabsToPooled[randomIndex]);
                 tempGameObject.SetActive(false);
-                var gameObjectType = tempGameObject.GetComponent<CollectableBase>().SelectedCollectableType;
+                var gameObjectType = tempGameObject.GetComponent<CollectableBase>().selectedCollectableType;
                 tempGameObject.name = gameObjectType + $"{i + 1}";
                 pooledGameObjectsList.Add(tempGameObject);
             }
