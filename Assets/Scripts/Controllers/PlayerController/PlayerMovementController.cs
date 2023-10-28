@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Controllers.PlayerController
@@ -7,9 +8,13 @@ namespace Controllers.PlayerController
         [Header("Player Movement Speed")]
         [SerializeField] private float playerZMovementSpeed;
         
-        
         [SerializeField] private bool isPlayerInputSubmit;
+        
+        [Header("Player X Axis Lerp value"),Range(0.1f,1f)]
+        [SerializeField] private float lerpValue;
 
+        private bool isMouseDragging;
+        
         private Camera mainCamera;
 
         private Vector3 previousInputPosition;
@@ -26,17 +31,23 @@ namespace Controllers.PlayerController
         private void FixedUpdate()
         {
             PlayerZAxisMovement();
+            PlayerXAxisMovement();
         }
         
         private void OnMouseDown()
         {
-            isPlayerInputSubmit = true;
+            // isPlayerInputSubmit = true;
             previousInputPosition = Input.mousePosition;
+        }
+
+        private void OnMouseUp()
+        {
+            isMouseDragging = false;
         }
 
         private void OnMouseDrag()
         {
-            PlayerXAxisMovement();
+            isMouseDragging = true;
         }
 
         private void PlayerZAxisMovement()
@@ -47,17 +58,17 @@ namespace Controllers.PlayerController
         
         private void PlayerXAxisMovement()
         {
+            if(!isMouseDragging) return;
             var inputPosition = Input.mousePosition;
             var transformPosition = transform.position;
-            if (Mathf.Abs(inputPosition.x - previousInputPosition.x) > 1f)
+            if (Mathf.Abs(inputPosition.x - previousInputPosition.x) > 0.5f)
             {
                 var distanceToScreen = mainCamera.WorldToScreenPoint(transformPosition).z;
                 var inputPositionInWorldScreenPoint = mainCamera.ScreenToWorldPoint(new Vector3(inputPosition.x, 0f, distanceToScreen));
-                var previousInputPositionWorldScreenPoint = mainCamera.ScreenToWorldPoint(new Vector3(previousInputPosition.x, 0f, distanceToScreen));
-                var differenceAlongXAxis = inputPositionInWorldScreenPoint.x - previousInputPositionWorldScreenPoint.x;
-                
-                var targetPosition = new Vector3(transform.position.x + differenceAlongXAxis,transformPosition.y,transformPosition.z);
-                mRigidbody.MovePosition(targetPosition);
+                var targetPosition = new Vector3(inputPositionInWorldScreenPoint.x, transformPosition.y,
+                    transformPosition.z);
+                var smoothTargetPosition = Vector3.Lerp(transformPosition, targetPosition, lerpValue);
+                mRigidbody.MovePosition(smoothTargetPosition);
             }
             previousInputPosition = Input.mousePosition;
         }
