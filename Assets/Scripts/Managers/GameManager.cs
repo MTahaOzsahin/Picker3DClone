@@ -6,7 +6,8 @@ namespace Managers
 {
     public enum GameStates
     {
-        Initializing,
+        OnInitializingPool,
+        OnInitializingLevel,
         WaitingInput,
         Started,
         CheckPoint1,
@@ -29,7 +30,8 @@ namespace Managers
         }
         
         
-        public Action OnInitializing;
+        public Action OnInitializingPool;
+        public Action OnInitializingLevel;
         public Action OnWaitingInput;
         public Action OnStarted;
         public Action OnCheckPoint1;
@@ -37,9 +39,9 @@ namespace Managers
         public Action OnCheckPoint3;
         public Action OnEnding;
 
-        private void OnEnable()
+        private void Start()
         {
-            SelectedGameStates = GameStates.Initializing;
+            SelectedGameStates = GameStates.OnInitializingPool;
         }
 
         /// <summary>
@@ -47,7 +49,8 @@ namespace Managers
         /// </summary>
         private void OnDisable()
         {
-            OnInitializing = null;
+            OnInitializingPool = null;
+            OnInitializingLevel = null;
             OnWaitingInput = null;
             OnStarted = null;
             OnCheckPoint1 = null;
@@ -60,8 +63,11 @@ namespace Managers
         {
             switch (SelectedGameStates)
             {
-                case GameStates.Initializing:
-                    OnInitializing?.Invoke();
+                case GameStates.OnInitializingPool:
+                    OnInitializingPool?.Invoke();
+                    break;
+                case GameStates.OnInitializingLevel:
+                    OnInitializingLevel?.Invoke();
                     break;
                 case GameStates.WaitingInput:
                     OnWaitingInput?.Invoke();
@@ -81,6 +87,7 @@ namespace Managers
                 case GameStates.Ending:
                     OnEnding?.Invoke();
                     break;
+               
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -1,4 +1,5 @@
 using System;
+using Managers;
 using UnityEngine;
 
 namespace Controllers.CollectablesController
@@ -13,8 +14,11 @@ namespace Controllers.CollectablesController
     {
         public CollectableType selectedCollectableType;
 
+        [Header("Push strength"),Range(1f,500f)] 
+        [SerializeField] private float pushStrength;
+        
         private Rigidbody mRigidbody;
-
+        
         private void Awake()
         {
             mRigidbody = GetComponent<Rigidbody>();
@@ -22,7 +26,7 @@ namespace Controllers.CollectablesController
 
         public void PushCollectablesToTarget()
         {
-            mRigidbody.AddForce(Vector3.forward * 50f);
+            mRigidbody.AddForce(Vector3.forward * pushStrength);
         }
     }
 }

@@ -1,51 +1,122 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using Controllers.CollectablesController;
+using Controllers.PlatformControllers;
+using Managers;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Helpers
 {
     public class ObjectPool : SingletonMB<ObjectPool>
     {
         [Header("Collectables Prefabs"), Tooltip("Place any collectable to instantiate")]
-        [SerializeField] private List<GameObject> prefabsToPooled;
+        [SerializeField] private List<GameObject> collectablePrefabsToPooled;
         
-        [HideInInspector]
-        public List<GameObject> pooledGameObjectsList;
-        
-        [Header("How many collectables wanted to instantiate")]
+        [Header("How many collectables wanted to be pooled")]
         public int targetQuantityForCollectables;
+        
+        [Header("Platform Normal Prefabs")]
+        [SerializeField] private GameObject platformNormalPrefabToPooled;
+        
+        [Header("Platform CheckPoint Prefabs")]
+        [SerializeField] private GameObject platformCheckPointPrefabToPooled;
+        
+        [Header("How many platform wanted to be pooled"),Tooltip("Will instantiate foreach as target quantity")]
+        public int targetQuantityForPlatforms;
+        
+        [HideInInspector] public List<GameObject> pooledCollectablesList;
+        [HideInInspector] public List<GameObject> pooledNormalPlatformsList;
+        [HideInInspector] public List<GameObject> pooledCheckPointPlatformsList;
 
-        private void Start()
+
+        private void OnEnable()
         {
-            
-            pooledGameObjectsList = new List<GameObject>();
+            GameManager.Instance.OnInitializingPool += InitPools;
+        }
+
+        private void OnDisable()
+        {
+            GameManager.Instance.OnInitializingPool -= InitPools;
+        }
+
+        private void Awake()
+        {
+            pooledCollectablesList = new List<GameObject>();
+            pooledNormalPlatformsList = new List<GameObject>();
+        }
+
+
+        private void InitPools()
+        {
             for (int i = 0; i < targetQuantityForCollectables; i++)
             {
-                var randomIndex = Random.Range(0, prefabsToPooled.Count);
-                var tempGameObject = Instantiate(prefabsToPooled[randomIndex]);
-                tempGameObject.SetActive(false);
-                var gameObjectType = tempGameObject.GetComponent<CollectableBase>().selectedCollectableType;
-                tempGameObject.name = gameObjectType + $"{i + 1}";
-                pooledGameObjectsList.Add(tempGameObject);
+                var randomIndex = Random.Range(0, collectablePrefabsToPooled.Count);
+                var tempCollectableGameObject = Instantiate(collectablePrefabsToPooled[randomIndex],transform);
+                tempCollectableGameObject.SetActive(false);
+                var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
+                tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
+                pooledCollectablesList.Add(tempCollectableGameObject);
             }
+            
+            for (int i = 0; i < targetQuantityForPlatforms; i++)
+            {
+                var tempPlatformNormalGameObject = Instantiate(platformNormalPrefabToPooled, transform);
+                tempPlatformNormalGameObject.SetActive(false);
+                var platformNormalGameObjectType = tempPlatformNormalGameObject.GetComponent<PlatformBase>().selectedPlatformType;
+                tempPlatformNormalGameObject.name = platformNormalGameObjectType + $"{i + 1}";
+                pooledNormalPlatformsList.Add(tempPlatformNormalGameObject);
+                
+                var tempPlatformCheckPointGameObject = Instantiate(platformCheckPointPrefabToPooled, transform);
+                tempPlatformCheckPointGameObject.SetActive(false);
+                var platformCheckPointGameObjectType = tempPlatformCheckPointGameObject.GetComponent<PlatformBase>().selectedPlatformType;
+                tempPlatformCheckPointGameObject.name = platformCheckPointGameObjectType + $"{i + 1}";
+                pooledCheckPointPlatformsList.Add(tempPlatformCheckPointGameObject);
+                
+            }
+
+            GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
         }
         
-        public GameObject GetPooledObject(GameObject parentGameObject)
+        public GameObject GetPooledCollectableGameObject(Transform parentGameObject)
         {
-            for(int i = 0; i < targetQuantityForCollectables; i++)
+            if (pooledCollectablesList.Count == 0) return null;
+            var collectableGameObject = pooledCollectablesList.First();
+            if(!collectableGameObject.activeInHierarchy)
             {
-                if(!pooledGameObjectsList[i].activeInHierarchy)
-                {
-                    pooledGameObjectsList[i].transform.SetParent(parentGameObject.transform);
-                    return pooledGameObjectsList[i];
-                }
+                collectableGameObject.transform.SetParent(parentGameObject);
+                pooledCollectablesList.Remove(collectableGameObject);
+                return collectableGameObject;
             }
             return null;
+        }
+        
+        public GameObject GetPooledPlatformNormalGameObject(Transform parentGameObject)
+        {
+            var wantedNormalPlatformGameObject = pooledNormalPlatformsList.Where(x =>
+                x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.Normal && !x.activeInHierarchy).ToList();
+            if (wantedNormalPlatformGameObject.Count == 0) return null;
+            var normalPlatform = wantedNormalPlatformGameObject.First();
+            normalPlatform.transform.SetParent(parentGameObject);
+            pooledNormalPlatformsList.Remove(wantedNormalPlatformGameObject.First());
+            return normalPlatform;
+        }
+        
+        public GameObject GetPooledPlatformCheckPointGameObject(Transform parentGameObject)
+        {
+            var wantedCheckPointPlatformGameObject = pooledCheckPointPlatformsList.Where(x =>
+                x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.CheckPoint && !x.activeInHierarchy).ToList();
+            if (wantedCheckPointPlatformGameObject.Count == 0) return null;
+            var checkPointPlatform = wantedCheckPointPlatformGameObject.First();
+            checkPointPlatform.transform.SetParent(parentGameObject);
+            pooledCheckPointPlatformsList.Remove(wantedCheckPointPlatformGameObject.First());
+            return checkPointPlatform;
         }
 
         public void ReturnPooledObjectToPool()
         {
-            foreach (var pooledGameObject in pooledGameObjectsList)
+            foreach (var pooledGameObject in pooledCollectablesList)
             {
                 if (pooledGameObject.activeInHierarchy)
                 {
@@ -57,12 +128,12 @@ namespace Helpers
 
         public void DestroyPooledObjects()
         {
-            if (pooledGameObjectsList.Count == 0) return;
-            foreach (var pooledGameObject in pooledGameObjectsList)
+            if (pooledCollectablesList.Count == 0) return;
+            foreach (var pooledGameObject in pooledCollectablesList)
             {
                 Destroy(pooledGameObject);
             }
-            pooledGameObjectsList.Clear();
+            pooledCollectablesList.Clear();
         }
 
         

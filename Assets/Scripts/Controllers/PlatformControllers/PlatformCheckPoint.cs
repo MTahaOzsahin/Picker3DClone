@@ -21,16 +21,16 @@ namespace Controllers.PlatformControllers
             if (other.gameObject.CompareTag("Player"))
             {
                 GameManager.Instance.SelectedGameStates = GameStates.CheckPoint1;
-                StartCoroutine(TempCoroutine());
+                // StartCoroutine(TempCoroutine());
             }
         }
 
-        private IEnumerator TempCoroutine()
-        {
-            yield return new WaitForSeconds(5f);
-            var activeScene = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(activeScene);
-        }
+        // private IEnumerator TempCoroutine()
+        // {
+        //     yield return new WaitForSeconds(5f);
+        //     var activeScene = SceneManager.GetActiveScene().name;
+        //     SceneManager.LoadScene(activeScene);
+        // }
 
         private void OnTriggerStay(Collider other)
         {

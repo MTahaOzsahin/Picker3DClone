@@ -24,6 +24,11 @@ namespace Controllers.PlayerController
             mRigidbody = GetComponent<Rigidbody>();
         }
 
+        private void Start()
+        {
+            mRigidbody.isKinematic = false;
+        }
+
         private void OnEnable()
         {
             GameManager.Instance.OnStarted += OnGameStart;
@@ -66,6 +71,7 @@ namespace Controllers.PlayerController
 
         private void OnGameStart()
         {
+            mRigidbody.isKinematic = true;
             isGameStarted = true;
             isMovementAllowed = true;
         }
@@ -73,6 +79,7 @@ namespace Controllers.PlayerController
         private void OnNoneMovementState()
         {
             isMovementAllowed = false;
+            mRigidbody.isKinematic = false;
         }
 
         private void PlayerMovement()

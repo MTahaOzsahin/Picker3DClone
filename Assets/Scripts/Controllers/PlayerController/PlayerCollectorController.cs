@@ -30,7 +30,7 @@ namespace Controllers.PlayerController
             GameManager.Instance.OnCheckPoint3 -= OnCheckPoint;
         }
 
-        private void OnCheckPoint()
+        private void OnCheckPoint() //TODO
         {
             foreach (var collectedGameObject in collectedGameObjects)
             {

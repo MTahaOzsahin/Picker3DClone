@@ -5,8 +5,7 @@ namespace Controllers.PlatformControllers
     public enum PlatformType
     {
         Normal,
-        CheckPoint,
-        End
+        CheckPoint
     }
     public class PlatformBase : MonoBehaviour
     {
