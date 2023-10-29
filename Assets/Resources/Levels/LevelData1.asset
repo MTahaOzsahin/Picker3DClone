@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7be234c1f791644804d51fc8f3e932, type: 3}
   m_Name: LevelData1
   m_EditorClassIdentifier: 
+  playerStartPosition: {x: 0, y: 1, z: -20}
   levelIndex: 1
   checkPoint1Target: 5
   checkPoint2Target: 5

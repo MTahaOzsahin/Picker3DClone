@@ -9,6 +9,7 @@ namespace Data.LevelData
     [CreateAssetMenu(fileName = "LevelData",menuName = "Level Data/New Level Data",order = 1)]
     public class LevelData : ScriptableObject
     {
+        public Vector3 playerStartPosition;
         public int levelIndex;
         public int checkPoint1Target;
         public int checkPoint2Target;

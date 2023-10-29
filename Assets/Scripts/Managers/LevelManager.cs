@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Helpers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Managers
 {
@@ -79,6 +80,7 @@ namespace Managers
             else
             {
                 Debug.LogError("Fail");
+                StartCoroutine(TempCoroutine());
             }
         }
         
@@ -98,6 +100,7 @@ namespace Managers
             else
             {
                 Debug.LogError("Fail");
+                StartCoroutine(TempCoroutine());
             }
         }
         
@@ -118,7 +121,15 @@ namespace Managers
             else
             {
                 Debug.LogError("Fail");
+                StartCoroutine(TempCoroutine());
             }
+        }
+        
+        private IEnumerator TempCoroutine()
+        {
+            yield return new WaitForSeconds(5f);
+            var activeScene = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(activeScene);
         }
     }
 }

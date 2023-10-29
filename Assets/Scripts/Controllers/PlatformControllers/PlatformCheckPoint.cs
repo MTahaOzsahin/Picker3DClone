@@ -5,7 +5,6 @@ using System.Linq;
 using DG.Tweening;
 using Managers;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Controllers.PlatformControllers
 {
@@ -157,16 +156,8 @@ namespace Controllers.PlatformControllers
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
-                // StartCoroutine(TempCoroutine());
             }
         }
-
-        // private IEnumerator TempCoroutine()
-        // {
-        //     yield return new WaitForSeconds(5f);
-        //     var activeScene = SceneManager.GetActiveScene().name;
-        //     SceneManager.LoadScene(activeScene);
-        // }
 
         private void OnTriggerStay(Collider other)
         {
