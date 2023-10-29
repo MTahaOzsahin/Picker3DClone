@@ -12,25 +12,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df7be234c1f791644804d51fc8f3e932, type: 3}
   m_Name: LevelData1
   m_EditorClassIdentifier: 
+  levelIndex: 1
+  checkPoint1Target: 5
+  checkPoint2Target: 5
+  checkPoint3Target: 5
   platformData:
   - position: {x: 0, y: 0, z: 0}
     platformType: 0
-    checkPointCount: 0
+    platformCheckPointIndex: 0
   - position: {x: 0, y: 0, z: 30}
     platformType: 1
-    checkPointCount: 10
+    platformCheckPointIndex: 1
   - position: {x: 0, y: 0, z: 70}
     platformType: 0
-    checkPointCount: 0
+    platformCheckPointIndex: 0
   - position: {x: 0, y: 0, z: 100}
     platformType: 1
-    checkPointCount: 10
+    platformCheckPointIndex: 2
   - position: {x: 0, y: 0, z: 140}
     platformType: 0
-    checkPointCount: 0
+    platformCheckPointIndex: 0
   - position: {x: 0, y: 0, z: 170}
     platformType: 1
-    checkPointCount: 10
+    platformCheckPointIndex: 3
   collectableData:
   - position: {x: -4, y: 0.75, z: -10}
     ballPackType: 0
@@ -72,5 +76,23 @@ MonoBehaviour:
     ballPackType: 1
   - position: {x: 1, y: 0.75, z: 4}
     ballPackType: 1
-  - position: {x: -1, y: 0.75, z: 2}
+  - position: {x: -1, y: 0.75, z: 50}
+    ballPackType: 1
+  - position: {x: -1, y: 0.75, z: 51}
+    ballPackType: 1
+  - position: {x: -1, y: 0.75, z: 52}
+    ballPackType: 2
+  - position: {x: -1, y: 0.75, z: 53}
     ballPackType: 0
+  - position: {x: -1, y: 0.75, z: 54}
+    ballPackType: 2
+  - position: {x: -1, y: 0.75, z: 120}
+    ballPackType: 0
+  - position: {x: -1, y: 0.75, z: 121}
+    ballPackType: 2
+  - position: {x: -1, y: 0.75, z: 122}
+    ballPackType: 1
+  - position: {x: -1, y: 0.75, z: 123}
+    ballPackType: 2
+  - position: {x: -1, y: 0.75, z: 124}
+    ballPackType: 1

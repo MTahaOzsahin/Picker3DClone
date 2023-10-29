@@ -42,8 +42,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 4, z: 0.31457755}
-  m_Center: {x: 0, y: 2, z: 0.32350233}
+  m_Size: {x: 1, y: 4, z: 0.07889614}
+  m_Center: {x: 0, y: 2, z: 0.36079055}
 --- !u!1 &8828402000086752095
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,6 +185,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedPlatformType: 1
   selectedCheckPointIndex: 0
+  triggerBoxCollider: {fileID: 8828401999609594420}
+  poolGameObject: {fileID: 8828402001595882956}
 --- !u!54 &8828402000086752071
 Rigidbody:
   m_ObjectHideFlags: 0

@@ -1,8 +1,10 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.CollectablesController;
 using Controllers.PlatformControllers;
+using DG.Tweening;
 using Managers;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -114,9 +116,63 @@ namespace Helpers
             return checkPointPlatform;
         }
 
-        public void ReturnPooledObjectToPool()
+        public void ReturnAnyPooledGameObjectToPool(GameObject pooledGameObject)
+        {
+            StartCoroutine(ReturnAnyPooledGameObjectCoroutine(pooledGameObject));
+        }
+
+        private IEnumerator ReturnAnyPooledGameObjectCoroutine(GameObject pooledGameObject)
+        {
+            var originScaleValue = pooledGameObject.transform.localScale;
+            var scaleTween = pooledGameObject.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.5f).SetEase(Ease.Linear);
+            scaleTween.OnComplete(() =>
+            {
+                pooledGameObject.SetActive(false);
+                pooledGameObject.transform.SetParent(transform);
+                if (pooledGameObject.GetComponent<CollectableBase>() != null)
+                {
+                    if (pooledCollectablesList.Contains(pooledGameObject)) return;
+                    pooledCollectablesList.Add(pooledGameObject);
+                }
+                else if (pooledGameObject.GetComponent<PlatformNormal>() != null)
+                {
+                    if (pooledNormalPlatformsList.Contains(pooledGameObject)) return;
+                    pooledNormalPlatformsList.Add(pooledGameObject);
+                }
+                else if (pooledGameObject.GetComponent<PlatformCheckPoint>() != null)
+                {
+                    if (pooledCheckPointPlatformsList.Contains(pooledGameObject)) return;
+                    pooledCheckPointPlatformsList.Add(pooledGameObject);
+                }
+                scaleTween.Kill();
+                pooledGameObject.transform.localScale = originScaleValue;
+            });
+            yield return null;
+        }
+
+        public void ReturnPooledCollectableGameObjectToPool()
         {
             foreach (var pooledGameObject in pooledCollectablesList)
+            {
+                if (pooledGameObject.activeInHierarchy)
+                {
+                    pooledGameObject.SetActive(false);
+                    pooledGameObject.transform.SetParent(transform);
+                }
+            }
+        }
+        
+        public void ReturnPooledPlatformGameObjectToPool()
+        {
+            foreach (var pooledGameObject in pooledNormalPlatformsList)
+            {
+                if (pooledGameObject.activeInHierarchy)
+                {
+                    pooledGameObject.SetActive(false);
+                    pooledGameObject.transform.SetParent(transform);
+                }
+            }
+            foreach (var pooledGameObject in pooledCheckPointPlatformsList)
             {
                 if (pooledGameObject.activeInHierarchy)
                 {

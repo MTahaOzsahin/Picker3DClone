@@ -8,12 +8,13 @@ namespace Managers
     {
         OnInitializingPool,
         OnInitializingLevel,
-        WaitingInput,
-        Started,
-        CheckPoint1,
-        CheckPoint2,
-        CheckPoint3,
-        Ending
+        OnWaitingInput,
+        OnStarted,
+        OnCheckPoint1,
+        OnCheckPoint2,
+        OnCheckPoint3,
+        OnLevelAdjusting,
+        OnEnding
     }
     [DefaultExecutionOrder(-10)]
     public class GameManager : SingletonMB<GameManager>
@@ -37,6 +38,7 @@ namespace Managers
         public Action OnCheckPoint1;
         public Action OnCheckPoint2;
         public Action OnCheckPoint3;
+        public Action OnLevelAdjusting;
         public Action OnEnding;
 
         private void Start()
@@ -69,25 +71,27 @@ namespace Managers
                 case GameStates.OnInitializingLevel:
                     OnInitializingLevel?.Invoke();
                     break;
-                case GameStates.WaitingInput:
+                case GameStates.OnWaitingInput:
                     OnWaitingInput?.Invoke();
                     break;
-                case GameStates.Started:
+                case GameStates.OnStarted:
                     OnStarted?.Invoke();
                     break;
-                case GameStates.CheckPoint1:
+                case GameStates.OnCheckPoint1:
                     OnCheckPoint1?.Invoke();
                     break;
-                case GameStates.CheckPoint2:
+                case GameStates.OnCheckPoint2:
                     OnCheckPoint2?.Invoke();
                     break;
-                case GameStates.CheckPoint3:
+                case GameStates.OnCheckPoint3:
                     OnCheckPoint3?.Invoke();
                     break;
-                case GameStates.Ending:
+                case GameStates.OnLevelAdjusting:
+                    OnLevelAdjusting?.Invoke();
+                    break;
+                case GameStates.OnEnding:
                     OnEnding?.Invoke();
                     break;
-               
                 default:
                     throw new ArgumentOutOfRangeException();
             }

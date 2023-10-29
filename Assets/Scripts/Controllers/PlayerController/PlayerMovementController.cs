@@ -32,6 +32,7 @@ namespace Controllers.PlayerController
         private void OnEnable()
         {
             GameManager.Instance.OnStarted += OnGameStart;
+            GameManager.Instance.OnWaitingInput += OnWaitingInput;
             GameManager.Instance.OnCheckPoint1 += OnNoneMovementState;
             GameManager.Instance.OnCheckPoint2 += OnNoneMovementState;
             GameManager.Instance.OnCheckPoint3 += OnNoneMovementState;
@@ -42,6 +43,7 @@ namespace Controllers.PlayerController
         {
             if (GameManager.Instance == null) return;
             GameManager.Instance.OnStarted -= OnGameStart;
+            GameManager.Instance.OnWaitingInput -= OnWaitingInput;
             GameManager.Instance.OnCheckPoint1 -= OnNoneMovementState;
             GameManager.Instance.OnCheckPoint2 -= OnNoneMovementState;
             GameManager.Instance.OnCheckPoint3 -= OnNoneMovementState;
@@ -56,7 +58,10 @@ namespace Controllers.PlayerController
         private void OnMouseDown()
         {
             if (isGameStarted) return;
-            GameManager.Instance.SelectedGameStates = GameStates.Started;
+            if (GameManager.Instance.SelectedGameStates == GameStates.OnWaitingInput)
+            {
+                GameManager.Instance.SelectedGameStates = GameStates.OnStarted;
+            }
         }
 
         private void OnMouseUp()
@@ -74,6 +79,11 @@ namespace Controllers.PlayerController
             mRigidbody.isKinematic = true;
             isGameStarted = true;
             isMovementAllowed = true;
+        }
+
+        private void OnWaitingInput()
+        {
+            isGameStarted = false;
         }
 
         private void OnNoneMovementState()

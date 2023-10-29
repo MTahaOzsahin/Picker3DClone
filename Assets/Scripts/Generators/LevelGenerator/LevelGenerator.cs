@@ -29,6 +29,8 @@ namespace Generators.LevelGenerator
         {
             GeneratePlatform();
             GenerateCollectable();
+            GetLevelData();
+            GameManager.Instance.SelectedGameStates = GameStates.OnWaitingInput;
         }
 
         private void GenerateCollectable()
@@ -58,11 +60,23 @@ namespace Generators.LevelGenerator
                         var platformCheckPointGameObject = ObjectPool.Instance.GetPooledPlatformCheckPointGameObject(transform);
                         platformCheckPointGameObject.SetActive(true);
                         platformCheckPointGameObject.transform.position = platform.position;
+                        platformCheckPointGameObject.GetComponent<PlatformCheckPoint>().InitCheckPointPlatform(platform.platformCheckPointIndex);
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
             }
+        }
+
+        private void GetLevelData()
+        {
+            var levelData = exampleLevelData;
+            var levelManagerInstance = LevelManager.Instance;
+            levelManagerInstance.levelIndex = levelData.levelIndex;
+            levelManagerInstance.checkPoint1Target = levelData.checkPoint1Target;
+            levelManagerInstance.checkPoint2Target = levelData.checkPoint2Target;
+            levelManagerInstance.checkPoint3Target = levelData.checkPoint3Target;
+            levelManagerInstance.playerCurrentPositionInLevel = 1;
         }
     }
 }
