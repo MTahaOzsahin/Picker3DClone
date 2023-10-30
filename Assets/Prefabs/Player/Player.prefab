@@ -114,7 +114,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a043004a3bacebd45be6154d3ff0e1fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerZMovementSpeed: 0.3
+  playerZMovementSpeed: 0.5
   lerpValue: 0.4
 --- !u!114 &6425322576173646113
 MonoBehaviour:

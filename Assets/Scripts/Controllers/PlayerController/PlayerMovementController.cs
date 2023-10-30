@@ -6,7 +6,7 @@ namespace Controllers.PlayerController
 {
     public class PlayerMovementController : MonoBehaviour
     {
-        [Header("Player Movement Speed"),Range(0.01f,0.5f)]
+        [Header("Player Movement Speed"),Range(0.1f,1f)]
         [SerializeField] private float playerZMovementSpeed;
 
         [Header("Player X Axis Lerp value"),Range(0.1f,1f)]
