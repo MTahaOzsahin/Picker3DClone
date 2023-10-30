@@ -18,14 +18,7 @@ namespace Generators.LevelGenerator
         private List<Vector3> collectablesRedPositions;
         private List<Vector3> collectablesGreenPositions;
         private List<Vector3> collectablesBluePositions;
-
         
-
-        private void Awake()
-        {
-            currentLevelData = ResourcesManager.Instance.LoadLevel(LevelManager.Instance.targetLevel);
-        }
-
         private void OnEnable()
         {
             GameManager.Instance.OnInitializingLevel += GenerateLevel;
@@ -39,12 +32,23 @@ namespace Generators.LevelGenerator
 
         private void GenerateLevel()
         {
+            GetLevelData();
             TakePositionsFromMap();
             GeneratePlatform();
             GenerateCollectable();
             GeneratePlayer();
-            GetLevelData();
             GameManager.Instance.SelectedGameStates = GameStates.OnWaitingInput;
+        }
+        
+        private void GetLevelData()
+        {
+            currentLevelData = ResourcesManager.Instance.LoadLevel(LevelManager.Instance.targetLevel);
+            var levelData = currentLevelData;
+            var levelManagerInstance = LevelManager.Instance;
+            levelManagerInstance.checkPoint1Target = levelData.checkPoint1Target;
+            levelManagerInstance.checkPoint2Target = levelData.checkPoint2Target;
+            levelManagerInstance.checkPoint3Target = levelData.checkPoint3Target;
+            levelManagerInstance.playerCurrentPositionInLevel = 1;
         }
         
         private void TakePositionsFromMap()
@@ -81,6 +85,7 @@ namespace Generators.LevelGenerator
             var rotationToQuaternion = Quaternion.Euler(new Vector3(0f, 180f, 0f));
             var clonePlayerGameObject = Instantiate(playerPrefab, playerStartPosition, rotationToQuaternion,transform);
             cineMachineVirtualCamera.Follow = clonePlayerGameObject.transform;
+            LevelManager.Instance.clonePLayerGameObject = clonePlayerGameObject;
         }
 
         private void GenerateCollectable()
@@ -129,16 +134,6 @@ namespace Generators.LevelGenerator
                         throw new ArgumentOutOfRangeException();
                 }
             }
-        }
-
-        private void GetLevelData()
-        {
-            var levelData = currentLevelData;
-            var levelManagerInstance = LevelManager.Instance;
-            levelManagerInstance.checkPoint1Target = levelData.checkPoint1Target;
-            levelManagerInstance.checkPoint2Target = levelData.checkPoint2Target;
-            levelManagerInstance.checkPoint3Target = levelData.checkPoint3Target;
-            levelManagerInstance.playerCurrentPositionInLevel = 1;
         }
     }
 }

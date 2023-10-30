@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using Managers;
+using TMPro;
 using UnityEngine;
 
 namespace Controllers.PlatformControllers
@@ -24,10 +25,19 @@ namespace Controllers.PlatformControllers
         [Header("Pool Trigger Collider")]
         [SerializeField] private GameObject poolGameObject;
 
+        [Header("Target Collectable Text")] 
+        [SerializeField] private TextMeshProUGUI targetCountText;
+
+        [Header("Wall BoxCollider")] 
+        [SerializeField] private BoxCollider wallBoxCollider;
+
         private List<BoxCollider> poolGameObjectColliders;
+        private List<GameObject> collectableGameObjectInPool;
+        private int targetCollectablesCount;
 
         private void Awake()
         {
+            collectableGameObjectInPool = new List<GameObject>();
             poolGameObjectColliders = new List<BoxCollider>();
             poolGameObjectColliders = poolGameObject.GetComponents<BoxCollider>().ToList();
         }
@@ -53,20 +63,38 @@ namespace Controllers.PlatformControllers
 
         public void InitCheckPointPlatform(int checkPointIndex)
         {
+            var levelManagerInstance = LevelManager.Instance;
             switch (checkPointIndex)
             {
                 case 1:
                     selectedCheckPointIndex = CheckPointIndex.First;
+                    if (levelManagerInstance != null)
+                        targetCountText.text = "0/" + levelManagerInstance.checkPoint1Target;
+                    targetCollectablesCount = levelManagerInstance.checkPoint1Target;
                     break;
                 case 2:
                     selectedCheckPointIndex = CheckPointIndex.Second;
+                    if (levelManagerInstance != null)
+                        targetCountText.text = "0/" + levelManagerInstance.checkPoint2Target;
+                    targetCollectablesCount = levelManagerInstance.checkPoint2Target;
                     break;
                 case 3:
-                    selectedCheckPointIndex = CheckPointIndex.Third;
+                    if (levelManagerInstance != null)
+                        selectedCheckPointIndex = CheckPointIndex.Third;
+                    targetCountText.text = "0/" + levelManagerInstance.checkPoint3Target;
+                    targetCollectablesCount = levelManagerInstance.checkPoint3Target;
                     break;
                 default:
                     selectedCheckPointIndex = CheckPointIndex.First;
+                    if (levelManagerInstance != null)
+                        targetCountText.text = "0/" + levelManagerInstance.checkPoint1Target;
+                    targetCollectablesCount = levelManagerInstance.checkPoint1Target;
                     break;
+            }
+
+            if (selectedCheckPointIndex == CheckPointIndex.Third)
+            {
+                wallBoxCollider.enabled = true;
             }
         }
 
@@ -80,7 +108,7 @@ namespace Controllers.PlatformControllers
             {
                 boxCollider.enabled = false;
             }
-            //TODO
+            collectableGameObjectInPool.Clear();
             MoveCheckPointPlatform();
             GameManager.Instance.SelectedGameStates = GameStates.OnWaitingInput;
         }
@@ -168,7 +196,14 @@ namespace Controllers.PlatformControllers
                 {
                     levelManagerInstance.playerCollectedGameObjects.Add(other.gameObject);
                 }
+                if (!collectableGameObjectInPool.Contains(other.gameObject))
+                {
+                    collectableGameObjectInPool.Add(other.gameObject);
+                }
             }
+
+            var collectableCountInPool = collectableGameObjectInPool.Count;
+            targetCountText.text = $"{collectableCountInPool + " / " + targetCollectablesCount}";
         }
 
         private void OnTriggerExit(Collider other)
@@ -179,6 +214,10 @@ namespace Controllers.PlatformControllers
                 if (levelManagerInstance.playerCollectedGameObjects.Contains(other.gameObject))
                 {
                     levelManagerInstance.playerCollectedGameObjects.Remove(other.gameObject);
+                }
+                if (collectableGameObjectInPool.Contains(other.gameObject))
+                {
+                    collectableGameObjectInPool.Remove(other.gameObject);
                 }
             }
         }

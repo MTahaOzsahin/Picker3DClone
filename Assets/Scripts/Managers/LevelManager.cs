@@ -1,6 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using Helpers;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -21,8 +21,11 @@ namespace Managers
         public int checkPoint2Target;
         public int checkPoint3Target;
 
+        public GameObject clonePLayerGameObject;
+
         private void Awake()
         {
+            DOTween.SetTweensCapacity(5000,50);
             playerCollectedGameObjects = new List<GameObject>();
         }
 
@@ -33,6 +36,7 @@ namespace Managers
             GameManager.Instance.OnCheckPoint1 += OnCheckPoint1;
             GameManager.Instance.OnCheckPoint2 += OnCheckPoint2;
             GameManager.Instance.OnCheckPoint3 += OnCheckPoint3;
+            GameManager.Instance.OnCheckPoint3Success += LoadNextLevel;
         }
 
         private void OnDisable()
@@ -43,6 +47,7 @@ namespace Managers
             GameManager.Instance.OnCheckPoint1 -= OnCheckPoint1;
             GameManager.Instance.OnCheckPoint2 -= OnCheckPoint2;
             GameManager.Instance.OnCheckPoint3 -= OnCheckPoint3;
+            GameManager.Instance.OnCheckPoint3Success -= LoadNextLevel;
         }
 
         private void ControlCollectedGameObjects()
@@ -75,6 +80,7 @@ namespace Managers
             var playerCollectedGameObjectCount = playerCollectedGameObjects.Count;
             if (playerCollectedGameObjectCount >= checkPoint1Target)
             {
+                GameManager.Instance.SelectedGameStates = GameStates.OnCheckPoint1Success;
                 GameManager.Instance.SelectedGameStates = GameStates.OnLevelAdjusting;
                 playerCurrentPositionInLevel = 2;
             }
@@ -96,7 +102,9 @@ namespace Managers
             var playerCollectedGameObjectCount = playerCollectedGameObjects.Count;
             if (playerCollectedGameObjectCount >= checkPoint2Target)
             {
+                GameManager.Instance.SelectedGameStates = GameStates.OnCheckPoint2Success;
                 GameManager.Instance.SelectedGameStates = GameStates.OnLevelAdjusting;
+                playerCurrentPositionInLevel = 2;
             }
             else
             {
@@ -116,7 +124,8 @@ namespace Managers
             var playerCollectedGameObjectCount = playerCollectedGameObjects.Count;
             if (playerCollectedGameObjectCount >= checkPoint3Target)
             {
-                GameManager.Instance.SelectedGameStates = GameStates.OnLevelAdjusting;
+                GameManager.Instance.SelectedGameStates = GameStates.OnCheckPoint3Success;
+                // GameManager.Instance.SelectedGameStates = GameStates.OnLevelAdjusting;
                 playerCurrentPositionInLevel = 3;
             }
             else
@@ -124,6 +133,12 @@ namespace Managers
                 Debug.LogError("Fail");
                 StartCoroutine(TempCoroutine());
             }
+        }
+
+        private void LoadNextLevel()
+        {
+            targetLevel++;
+            GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
         }
         
         private IEnumerator TempCoroutine()

@@ -11,8 +11,11 @@ namespace Managers
         OnWaitingInput,
         OnStarted,
         OnCheckPoint1,
+        OnCheckPoint1Success,
         OnCheckPoint2,
+        OnCheckPoint2Success,
         OnCheckPoint3,
+        OnCheckPoint3Success,
         OnLevelAdjusting,
         OnEnding
     }
@@ -36,8 +39,11 @@ namespace Managers
         public Action OnWaitingInput;
         public Action OnStarted;
         public Action OnCheckPoint1;
+        public Action OnCheckPoint1Success;
         public Action OnCheckPoint2;
+        public Action OnCheckPoint2Success;
         public Action OnCheckPoint3;
+        public Action OnCheckPoint3Success;
         public Action OnLevelAdjusting;
         public Action OnEnding;
 
@@ -56,8 +62,11 @@ namespace Managers
             OnWaitingInput = null;
             OnStarted = null;
             OnCheckPoint1 = null;
+            OnCheckPoint1Success = null;
             OnCheckPoint2 = null;
+            OnCheckPoint2Success = null;
             OnCheckPoint3 = null;
+            OnCheckPoint3Success = null;
             OnEnding = null;
         }
 
@@ -80,11 +89,20 @@ namespace Managers
                 case GameStates.OnCheckPoint1:
                     OnCheckPoint1?.Invoke();
                     break;
+                case GameStates.OnCheckPoint1Success:
+                    OnCheckPoint1Success?.Invoke();
+                    break;
                 case GameStates.OnCheckPoint2:
                     OnCheckPoint2?.Invoke();
                     break;
+                case GameStates.OnCheckPoint2Success:
+                    OnCheckPoint2Success?.Invoke();
+                    break;
                 case GameStates.OnCheckPoint3:
                     OnCheckPoint3?.Invoke();
+                    break;
+                case GameStates.OnCheckPoint3Success:
+                    OnCheckPoint3Success?.Invoke();
                     break;
                 case GameStates.OnLevelAdjusting:
                     OnLevelAdjusting?.Invoke();

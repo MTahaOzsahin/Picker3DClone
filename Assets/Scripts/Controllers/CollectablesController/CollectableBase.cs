@@ -1,4 +1,5 @@
 using System;
+using Helpers;
 using Managers;
 using UnityEngine;
 
@@ -27,6 +28,16 @@ namespace Controllers.CollectablesController
         public void PushCollectablesToTarget()
         {
             mRigidbody.AddForce(Vector3.forward * pushStrength);
+        }
+
+        private void Update()
+        {
+            var zDistanceFromPlayer =
+                LevelManager.Instance.clonePLayerGameObject.transform.position.z - transform.position.z;
+            if (zDistanceFromPlayer > 10f)
+            {
+                ObjectPool.Instance.ReturnAnyPooledGameObjectToPool(gameObject);
+            }
         }
     }
 }
