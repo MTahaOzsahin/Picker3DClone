@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +6,6 @@ using Controllers.PlatformControllers;
 using DG.Tweening;
 using Managers;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Helpers
 {
@@ -16,7 +14,7 @@ namespace Helpers
         [Header("Collectables Prefabs"), Tooltip("Place any collectable to instantiate")]
         [SerializeField] private List<GameObject> collectablePrefabsToPooled;
         
-        [Header("How many collectables wanted to be pooled")]
+        [Header("How many collectables wanted to be pooled. Will be for each")]
         public int targetQuantityForCollectables;
         
         [Header("Platform Normal Prefabs")]
@@ -54,12 +52,14 @@ namespace Helpers
         {
             for (int i = 0; i < targetQuantityForCollectables; i++)
             {
-                var randomIndex = Random.Range(0, collectablePrefabsToPooled.Count);
-                var tempCollectableGameObject = Instantiate(collectablePrefabsToPooled[randomIndex],transform);
-                tempCollectableGameObject.SetActive(false);
-                var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
-                tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
-                pooledCollectablesList.Add(tempCollectableGameObject);
+                for (int j = 0; j < collectablePrefabsToPooled.Count; j++)
+                {
+                    var tempCollectableGameObject = Instantiate(collectablePrefabsToPooled[j],transform);
+                    tempCollectableGameObject.SetActive(false);
+                    var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
+                    tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
+                    pooledCollectablesList.Add(tempCollectableGameObject);
+                }
             }
             
             for (int i = 0; i < targetQuantityForPlatforms; i++)
@@ -81,10 +81,12 @@ namespace Helpers
             GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
         }
         
-        public GameObject GetPooledCollectableGameObject(Transform parentGameObject)
+        public GameObject GetPooledCollectableGameObject(CollectableType selectedCollectableType,Transform parentGameObject)
         {
             if (pooledCollectablesList.Count == 0) return null;
-            var collectableGameObject = pooledCollectablesList.First();
+            var pooledCollectableWantedTypeList = pooledCollectablesList.Where(x =>
+                x.GetComponent<CollectableBase>().selectedCollectableType == selectedCollectableType).ToList();
+            var collectableGameObject = pooledCollectableWantedTypeList.First();
             if(!collectableGameObject.activeInHierarchy)
             {
                 collectableGameObject.transform.SetParent(parentGameObject);

@@ -90,6 +90,7 @@ namespace Controllers.PlayerController
         {
             isMovementAllowed = false;
             mRigidbody.isKinematic = false;
+            mRigidbody.velocity = Vector3.zero;
         }
 
         private void PlayerMovement()

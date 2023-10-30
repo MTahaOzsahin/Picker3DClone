@@ -7,11 +7,12 @@ using UnityEngine.SceneManagement;
 
 namespace Managers
 {
+    [DefaultExecutionOrder(-9)]
     public class LevelManager : SingletonMB<LevelManager>
     {
         public List<GameObject> playerCollectedGameObjects;
 
-        public int levelIndex;
+        public int targetLevel;
 
         [Tooltip("Which area player currently on.")]
         public int playerCurrentPositionInLevel;

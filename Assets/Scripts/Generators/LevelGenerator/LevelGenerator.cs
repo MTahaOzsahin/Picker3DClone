@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Cinemachine;
+using Controllers.CollectablesController;
 using Controllers.PlatformControllers;
 using Data.LevelData;
 using Helpers;
@@ -13,10 +15,15 @@ namespace Generators.LevelGenerator
         [SerializeField] private GameObject playerPrefab;
         [SerializeField] private CinemachineVirtualCamera cineMachineVirtualCamera;
         private LevelData currentLevelData;
+        private List<Vector3> collectablesRedPositions;
+        private List<Vector3> collectablesGreenPositions;
+        private List<Vector3> collectablesBluePositions;
+
+        
 
         private void Awake()
         {
-            currentLevelData = ResourcesManager.Instance.LoadLevel(1);
+            currentLevelData = ResourcesManager.Instance.LoadLevel(LevelManager.Instance.targetLevel);
         }
 
         private void OnEnable()
@@ -32,11 +39,40 @@ namespace Generators.LevelGenerator
 
         private void GenerateLevel()
         {
+            TakePositionsFromMap();
             GeneratePlatform();
             GenerateCollectable();
             GeneratePlayer();
             GetLevelData();
             GameManager.Instance.SelectedGameStates = GameStates.OnWaitingInput;
+        }
+        
+        private void TakePositionsFromMap()
+        {
+            collectablesRedPositions = new List<Vector3>();
+            collectablesGreenPositions = new List<Vector3>();
+            collectablesBluePositions = new List<Vector3>();
+            var levelMapPlatform = currentLevelData.collectablesCoordinateTexture;
+            for (int x = 0; x < levelMapPlatform.width; x++)
+            {
+                for (int y = 0; y < levelMapPlatform.height; y++)
+                {
+                    var pixelColor = levelMapPlatform.GetPixel(x, y);
+                    var adjustedPosition = new Vector3(x - 4, 0.75f, y - 25);
+                    if (pixelColor == Color.red)
+                    {
+                        collectablesRedPositions.Add(adjustedPosition);
+                    }
+                    else if ( pixelColor == Color.green)
+                    {
+                        collectablesGreenPositions.Add(adjustedPosition);
+                    }
+                    else if ( pixelColor == Color.blue)
+                    {
+                        collectablesBluePositions.Add(adjustedPosition);
+                    }
+                }
+            }
         }
 
         private void GeneratePlayer()
@@ -49,12 +85,25 @@ namespace Generators.LevelGenerator
 
         private void GenerateCollectable()
         {
-            var collectablesData = currentLevelData.collectableData;
-            foreach (var collectable in collectablesData)
+            foreach (var collectableColorPosition in collectablesRedPositions)
             {
-                var collectableGameObject = ObjectPool.Instance.GetPooledCollectableGameObject(transform);
+                var collectableGameObject = ObjectPool.Instance.GetPooledCollectableGameObject(CollectableType.Sphere,transform);
                 collectableGameObject.SetActive(true);
-                collectableGameObject.transform.position = collectable.position;
+                collectableGameObject.transform.position = collectableColorPosition;
+            }
+            
+            foreach (var collectableColorPosition in collectablesGreenPositions)
+            {
+                var collectableGameObject = ObjectPool.Instance.GetPooledCollectableGameObject(CollectableType.Cube,transform);
+                collectableGameObject.SetActive(true);
+                collectableGameObject.transform.position = collectableColorPosition;
+            }
+            
+            foreach (var collectableColorPosition in collectablesBluePositions)
+            {
+                var collectableGameObject = ObjectPool.Instance.GetPooledCollectableGameObject(CollectableType.Capsule,transform);
+                collectableGameObject.SetActive(true);
+                collectableGameObject.transform.position = collectableColorPosition;
             }
         }
 
@@ -86,7 +135,6 @@ namespace Generators.LevelGenerator
         {
             var levelData = currentLevelData;
             var levelManagerInstance = LevelManager.Instance;
-            levelManagerInstance.levelIndex = levelData.levelIndex;
             levelManagerInstance.checkPoint1Target = levelData.checkPoint1Target;
             levelManagerInstance.checkPoint2Target = levelData.checkPoint2Target;
             levelManagerInstance.checkPoint3Target = levelData.checkPoint3Target;

@@ -14,8 +14,9 @@ namespace Data.LevelData
         public int checkPoint1Target;
         public int checkPoint2Target;
         public int checkPoint3Target;
+        public Texture2D collectablesCoordinateTexture;
         public List<PlatformData> platformData;
-        public List<CollectableData> collectableData;
+        // public List<CollectableData> collectableData;
     }
 
     [Serializable]
@@ -26,10 +27,10 @@ namespace Data.LevelData
         public int platformCheckPointIndex;
     }
     
-    [Serializable]
-    public class CollectableData
-    {
-        public Vector3 position;
-        public CollectableType ballPackType;
-    }
+    // [Serializable]
+    // public class CollectableData
+    // {
+    //     public Vector3 position;
+    //     public CollectableType ballPackType;
+    // }
 }

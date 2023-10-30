@@ -12,8 +12,8 @@ GameObject:
   - component: {fileID: 6710589986937934792}
   - component: {fileID: 6710589986937934793}
   - component: {fileID: 6710589986937934798}
-  - component: {fileID: 6710589986937934799}
   - component: {fileID: 8306533371730165595}
+  - component: {fileID: 6710589986937934799}
   m_Layer: 0
   m_Name: CollectableCapsule
   m_TagString: Collectables
@@ -98,20 +98,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &6710589986937934799
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6710589986937934796}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8754d15dd8d9ba34c942e61351c26322, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  selectedCollectableType: 0
-  pushStrength: 50
 --- !u!54 &8306533371730165595
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -128,3 +114,17 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &6710589986937934799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6710589986937934796}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8754d15dd8d9ba34c942e61351c26322, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  selectedCollectableType: 2
+  pushStrength: 50
