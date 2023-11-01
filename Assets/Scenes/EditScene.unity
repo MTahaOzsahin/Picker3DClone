@@ -2211,7 +2211,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   selectedLevelProgress: 0
   playerCollectedGameObjects: []
-  targetLevel: 1
+  currentLevel: 0
   playerCurrentPositionInLevel: 1
   checkPoint1Target: 0
   checkPoint2Target: 0
@@ -2227,6 +2227,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1663322922}
   - component: {fileID: 1663322923}
+  - component: {fileID: 1663322924}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2261,6 +2262,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedGameStates: 0
+--- !u!114 &1663322924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1663322921}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9232f109473da704dbcf9f237d0ab5b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentLevel: 0
 --- !u!1 &1730358220
 GameObject:
   m_ObjectHideFlags: 0
