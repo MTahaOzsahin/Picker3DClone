@@ -12,7 +12,6 @@ namespace Generators.LevelGenerator
 {
     public class LevelGenerator : MonoBehaviour
     {
-        [SerializeField] private GameObject playerPrefab;
         [SerializeField] private CinemachineVirtualCamera cineMachineVirtualCamera;
         private LevelData currentLevelData;
         private List<Vector3> collectablesRedPositions;
@@ -32,12 +31,23 @@ namespace Generators.LevelGenerator
 
         private void GenerateLevel()
         {
+            DestroyCurrentLevel();
             GetLevelData();
             TakePositionsFromMap();
             GeneratePlatform();
             GenerateCollectable();
             GeneratePlayer();
             GameManager.Instance.SelectedGameStates = GameStates.OnWaitingInput;
+        }
+
+        private void DestroyCurrentLevel()
+        {
+            var childGameObjectCount = transform.childCount;
+            if (childGameObjectCount == 0)return;
+            for (int i = 0; i < childGameObjectCount; i++)
+            {
+                ObjectPool.Instance.ReturnAnyPooledGameObjectToPool(transform.GetChild(0).gameObject);
+            }
         }
         
         private void GetLevelData()
@@ -83,7 +93,11 @@ namespace Generators.LevelGenerator
         {
             var playerStartPosition = currentLevelData.playerStartPosition;
             var rotationToQuaternion = Quaternion.Euler(new Vector3(0f, 180f, 0f));
-            var clonePlayerGameObject = Instantiate(playerPrefab, playerStartPosition, rotationToQuaternion,transform);
+            var clonePlayerGameObject = ObjectPool.Instance.GetPooledPlayerGameObject(transform);
+            clonePlayerGameObject.transform.position = playerStartPosition;
+            clonePlayerGameObject.transform.rotation = rotationToQuaternion;
+            clonePlayerGameObject.SetActive(true);
+            clonePlayerGameObject.transform.SetAsFirstSibling();
             cineMachineVirtualCamera.Follow = clonePlayerGameObject.transform;
             LevelManager.Instance.clonePLayerGameObject = clonePlayerGameObject;
         }

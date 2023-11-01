@@ -3,18 +3,26 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Helpers;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Managers
 {
+    public enum LevelProgress
+    {
+        OnProgress,
+        Win,
+        Lose
+    }
+    
     [DefaultExecutionOrder(-9)]
     public class LevelManager : SingletonMB<LevelManager>
     {
+        public LevelProgress selectedLevelProgress;
+        
         public List<GameObject> playerCollectedGameObjects;
 
         public int targetLevel;
 
-        [Tooltip("Which area player currently on.")]
+        [Tooltip("Which area player currently in.")]
         public int playerCurrentPositionInLevel;
 
         public int checkPoint1Target;
@@ -27,27 +35,40 @@ namespace Managers
         {
             DOTween.SetTweensCapacity(5000,50);
             playerCollectedGameObjects = new List<GameObject>();
+            selectedLevelProgress = LevelProgress.OnProgress;
         }
 
         private void OnEnable()
         {
+            GameManager.Instance.OnInitializingLevel += SetPLayerCurrentPosition;
+            GameManager.Instance.OnStarted += SetLevelProgress;
             GameManager.Instance.OnWaitingInput += ClearCollectedGameObjects;
             GameManager.Instance.OnLevelAdjusting += ControlCollectedGameObjects;
             GameManager.Instance.OnCheckPoint1 += OnCheckPoint1;
             GameManager.Instance.OnCheckPoint2 += OnCheckPoint2;
             GameManager.Instance.OnCheckPoint3 += OnCheckPoint3;
-            GameManager.Instance.OnCheckPoint3Success += LoadNextLevel;
         }
 
         private void OnDisable()
         {
             if (GameManager.Instance == null) return;
+            GameManager.Instance.OnInitializingLevel -= SetPLayerCurrentPosition;
+            GameManager.Instance.OnStarted -= SetLevelProgress;
             GameManager.Instance.OnWaitingInput -= ClearCollectedGameObjects;
             GameManager.Instance.OnLevelAdjusting -= ControlCollectedGameObjects;
             GameManager.Instance.OnCheckPoint1 -= OnCheckPoint1;
             GameManager.Instance.OnCheckPoint2 -= OnCheckPoint2;
             GameManager.Instance.OnCheckPoint3 -= OnCheckPoint3;
-            GameManager.Instance.OnCheckPoint3Success -= LoadNextLevel;
+        }
+
+        private void SetPLayerCurrentPosition()
+        {
+            playerCurrentPositionInLevel = 1;
+        }
+
+        private void SetLevelProgress()
+        {
+            selectedLevelProgress = LevelProgress.OnProgress;
         }
 
         private void ControlCollectedGameObjects()
@@ -86,8 +107,8 @@ namespace Managers
             }
             else
             {
+                selectedLevelProgress = LevelProgress.Lose;
                 Debug.LogError("Fail");
-                StartCoroutine(TempCoroutine());
             }
         }
         
@@ -108,8 +129,8 @@ namespace Managers
             }
             else
             {
+                selectedLevelProgress = LevelProgress.Lose;
                 Debug.LogError("Fail");
-                StartCoroutine(TempCoroutine());
             }
         }
         
@@ -127,25 +148,16 @@ namespace Managers
                 GameManager.Instance.SelectedGameStates = GameStates.OnCheckPoint3Success;
                 // GameManager.Instance.SelectedGameStates = GameStates.OnLevelAdjusting;
                 playerCurrentPositionInLevel = 3;
+                selectedLevelProgress = LevelProgress.Win;
+                
             }
             else
             {
+                selectedLevelProgress = LevelProgress.Lose;
                 Debug.LogError("Fail");
-                StartCoroutine(TempCoroutine());
             }
-        }
-
-        private void LoadNextLevel()
-        {
-            targetLevel++;
-            GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
-        }
-        
-        private IEnumerator TempCoroutine()
-        {
-            yield return new WaitForSeconds(5f);
-            var activeScene = SceneManager.GetActiveScene().name;
-            SceneManager.LoadScene(activeScene);
+            GameManager.Instance.SelectedGameStates = GameStates.OnEnding;
+            ControlCollectedGameObjects();
         }
     }
 }

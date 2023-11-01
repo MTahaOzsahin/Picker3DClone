@@ -1,4 +1,3 @@
-using System;
 using Helpers;
 using Managers;
 using UnityEngine;
@@ -32,9 +31,20 @@ namespace Controllers.CollectablesController
 
         private void Update()
         {
+            var playerCloneGameObject = LevelManager.Instance.clonePLayerGameObject;
+            if (playerCloneGameObject == null) return;
+            var playerCloneGameObjectPosition = playerCloneGameObject.transform.position;
+            var thisTransformPosition = transform.position;
             var zDistanceFromPlayer =
-                LevelManager.Instance.clonePLayerGameObject.transform.position.z - transform.position.z;
+                playerCloneGameObjectPosition.z - thisTransformPosition.z;
+            var yDistanceFromPlayer =
+                playerCloneGameObjectPosition.y - thisTransformPosition.y;
             if (zDistanceFromPlayer > 10f)
+            {
+                ObjectPool.Instance.ReturnAnyPooledGameObjectToPool(gameObject);
+            }
+
+            if (yDistanceFromPlayer > 30f)
             {
                 ObjectPool.Instance.ReturnAnyPooledGameObjectToPool(gameObject);
             }
