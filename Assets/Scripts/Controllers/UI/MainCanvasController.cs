@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Globalization;
+using DG.Tweening;
 using Managers;
 using TMPro;
 using UnityEngine;
@@ -23,6 +24,9 @@ namespace Controllers.UI
         [SerializeField] private GameObject startPanel;
         [SerializeField] private GameObject endingPanel;
 
+        [Header("Start Panel Game Objects")]
+        [SerializeField] private GameObject dragToStartImage;
+
         [Header("Ending Panels Game Objects")]
         [SerializeField] private GameObject winCondition;
         [SerializeField] private GameObject loseCondition;
@@ -30,7 +34,9 @@ namespace Controllers.UI
         [Header("Ending Panels Buttons")] 
         [SerializeField] private Button nextLevelButton;
         [SerializeField] private Button restartLevelButton;
-        
+
+        private Tweener scaleTween;
+
         private void OnEnable()
         {
             nextLevelButton.onClick.AddListener(OnNextLevelButtonClick);
@@ -67,10 +73,17 @@ namespace Controllers.UI
             levelProgressFirst.color = Color.white;
             levelProgressSecond.color = Color.white;
             levelProgressThird.color = Color.white;
+            
+            scaleTween = dragToStartImage.transform.DOScale(new Vector3(1.1f, 1.1f, 1f), 0.8f)
+                .SetEase(Ease.Linear).SetLoops(-1,LoopType.Yoyo);
         }
 
         private void OnStart()
         {
+            if (scaleTween.IsActive())
+            {
+                scaleTween.Kill();
+            }
             startPanel.SetActive(false);
         }
 

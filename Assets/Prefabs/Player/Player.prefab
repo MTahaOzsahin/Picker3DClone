@@ -115,7 +115,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerZMovementSpeed: 0.5
-  lerpValue: 0.4
+  lerpValue: 0.3
 --- !u!114 &6425322576173646113
 MonoBehaviour:
   m_ObjectHideFlags: 0

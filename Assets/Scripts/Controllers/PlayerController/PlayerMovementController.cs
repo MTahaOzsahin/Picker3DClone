@@ -6,10 +6,10 @@ namespace Controllers.PlayerController
 {
     public class PlayerMovementController : MonoBehaviour
     {
-        [Header("Player Movement Speed"),Range(0.1f,1f)]
+        [Header("Player Movement Speed"),Range(0.1f,1f),Tooltip("Smaller values are slower.")]
         [SerializeField] private float playerZMovementSpeed;
 
-        [Header("Player X Axis Lerp value"),Range(0.1f,1f)]
+        [Header("Player X Axis Lerp value"),Range(0.1f,1f),Tooltip("Smaller values are slower.")]
         [SerializeField] private float lerpValue;
         
         private bool isMouseDragging;
