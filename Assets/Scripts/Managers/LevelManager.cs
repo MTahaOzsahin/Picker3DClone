@@ -108,7 +108,7 @@ namespace Managers
             else
             {
                 selectedLevelProgress = LevelProgress.Lose;
-                Debug.LogError("Fail");
+                GameManager.Instance.SelectedGameStates = GameStates.OnEnding;
             }
         }
         
@@ -130,7 +130,7 @@ namespace Managers
             else
             {
                 selectedLevelProgress = LevelProgress.Lose;
-                Debug.LogError("Fail");
+                GameManager.Instance.SelectedGameStates = GameStates.OnEnding;
             }
         }
         
@@ -146,15 +146,12 @@ namespace Managers
             if (playerCollectedGameObjectCount >= checkPoint3Target)
             {
                 GameManager.Instance.SelectedGameStates = GameStates.OnCheckPoint3Success;
-                // GameManager.Instance.SelectedGameStates = GameStates.OnLevelAdjusting;
                 playerCurrentPositionInLevel = 3;
                 selectedLevelProgress = LevelProgress.Win;
-                
             }
             else
             {
                 selectedLevelProgress = LevelProgress.Lose;
-                Debug.LogError("Fail");
             }
             GameManager.Instance.SelectedGameStates = GameStates.OnEnding;
             ControlCollectedGameObjects();

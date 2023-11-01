@@ -1,3 +1,4 @@
+using System.Collections;
 using Managers;
 using UnityEngine;
 
@@ -33,7 +34,9 @@ namespace Controllers.PlayerController
             GameManager.Instance.OnStarted += OnGameStart;
             GameManager.Instance.OnWaitingInput += OnWaitingInput;
             GameManager.Instance.OnCheckPoint1 += OnNoneMovementState;
+            GameManager.Instance.OnCheckPoint1Success += OnMovementState;
             GameManager.Instance.OnCheckPoint2 += OnNoneMovementState;
+            GameManager.Instance.OnCheckPoint2Success += OnMovementState;
             GameManager.Instance.OnCheckPoint3 += OnNoneMovementState;
             GameManager.Instance.OnEnding += OnNoneMovementState;
         }
@@ -44,7 +47,9 @@ namespace Controllers.PlayerController
             GameManager.Instance.OnStarted -= OnGameStart;
             GameManager.Instance.OnWaitingInput -= OnWaitingInput;
             GameManager.Instance.OnCheckPoint1 -= OnNoneMovementState;
+            GameManager.Instance.OnCheckPoint1Success -= OnMovementState;
             GameManager.Instance.OnCheckPoint2 -= OnNoneMovementState;
+            GameManager.Instance.OnCheckPoint2Success -= OnMovementState;
             GameManager.Instance.OnCheckPoint3 -= OnNoneMovementState;
             GameManager.Instance.OnEnding -= OnNoneMovementState;
         }
@@ -84,12 +89,28 @@ namespace Controllers.PlayerController
         {
             isGameStarted = false;
         }
+        
 
         private void OnNoneMovementState()
         {
             isMovementAllowed = false;
             mRigidbody.isKinematic = false;
             mRigidbody.velocity = Vector3.zero;
+        }
+
+        private void OnMovementState()
+        {
+            StartCoroutine(OnMovementStateCoroutine());
+        }
+
+        private IEnumerator OnMovementStateCoroutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+            if (GameManager.Instance.SelectedGameStates == GameStates.OnWaitingInput)
+            {
+                GameManager.Instance.SelectedGameStates = GameStates.OnStarted;
+            }
+            yield return null;
         }
 
         private void PlayerMovement()

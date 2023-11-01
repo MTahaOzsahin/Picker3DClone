@@ -118,9 +118,14 @@ namespace Controllers.UI
         private void OnNextLevelButtonClick()
         {
             LevelManager.Instance.targetLevel++;
+            if (LevelManager.Instance.targetLevel == 5)
+            {
+                LevelManager.Instance.targetLevel = 1;
+            }
             GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
             winCondition.SetActive(false);
             endingPanel.SetActive(false);
+            startPanel.SetActive(true);
         }
 
         private void OnRestartLevelButtonClick()
@@ -128,6 +133,7 @@ namespace Controllers.UI
             GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
             loseCondition.SetActive(false);
             endingPanel.SetActive(false);
+            startPanel.SetActive(true);
         }
     }
 }
