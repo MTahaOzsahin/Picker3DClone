@@ -174,11 +174,7 @@ namespace Helpers
         {
             var originScaleValue = pooledGameObject.transform.localScale;
             var scaleTween = pooledGameObject.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.5f).SetEase(Ease.Linear);
-            var allColliders = pooledGameObject.GetComponents<BoxCollider>();
-            foreach (var boxCollider in allColliders)
-            {
-                boxCollider.enabled = false;
-            }
+            DisableAllCollidersAndRigidBody(pooledGameObject);
             pooledGameObject.transform.SetParent(transform);
             scaleTween.OnComplete(() =>
             {
@@ -204,12 +200,35 @@ namespace Helpers
                     pooledPlayerList.Add(pooledGameObject);
                 }
                 pooledGameObject.transform.localScale = originScaleValue;
-                foreach (var boxCollider in allColliders)
-                {
-                    boxCollider.enabled = true;
-                }
+               EnableAllCollidersAndRigidBody(pooledGameObject);
                 scaleTween.Kill();
             });
+        }
+
+        private void DisableAllCollidersAndRigidBody(GameObject pooledGameObject)
+        {
+             var allColliders = pooledGameObject.GetComponents<BoxCollider>();
+            foreach (var boxCollider in allColliders)
+            {
+                boxCollider.enabled = false;
+            }
+
+            var mRigidBody = pooledGameObject.GetComponent<Rigidbody>();
+            mRigidBody.velocity = Vector3.zero;
+            mRigidBody.angularVelocity = Vector3.zero;
+            mRigidBody.isKinematic = false;
+        }
+        
+        private void EnableAllCollidersAndRigidBody(GameObject pooledGameObject)
+        {
+            var allColliders = pooledGameObject.GetComponents<BoxCollider>();
+            foreach (var boxCollider in allColliders)
+            {
+                boxCollider.enabled = false;
+            }
+
+            var mRigidBody = pooledGameObject.GetComponent<Rigidbody>();
+            mRigidBody.isKinematic = false;
         }
 
         public void DestroyRemainPooledObjects()
