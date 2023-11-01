@@ -18,7 +18,7 @@ namespace Managers
     {
         public LevelProgress selectedLevelProgress;
         
-        public List<GameObject> playerCollectedGameObjects;
+        [HideInInspector]public List<GameObject> playerCollectedGameObjects;
 
         [SerializeField] private int currentLevel;
         public int CurrentLevel
@@ -30,15 +30,25 @@ namespace Managers
                 SetPlayerPrefsLevel(value);
             }
         }
-
+        
         [Tooltip("Which area player currently in.")]
-        public int playerCurrentPositionInLevel;
+        [SerializeField] private int playerCurrentPositionInLevel;
+        public int PlayerCurrentPositionInLevel
+        {
+            get => playerCurrentPositionInLevel;
+            set => playerCurrentPositionInLevel = value;
+        }
 
         public int checkPoint1Target;
         public int checkPoint2Target;
         public int checkPoint3Target;
 
-        public GameObject clonePLayerGameObject;
+        [SerializeField] private GameObject clonePlayerGameObject;
+        public GameObject ClonePlayerGameObject
+        {
+            get => clonePlayerGameObject;
+            set => clonePlayerGameObject = value;
+        }
 
         private void Awake()
         {

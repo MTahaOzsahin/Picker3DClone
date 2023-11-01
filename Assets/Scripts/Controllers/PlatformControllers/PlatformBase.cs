@@ -16,7 +16,7 @@ namespace Controllers.PlatformControllers
         private void Update()
         {
             var zDistanceFromPlayer =
-                LevelManager.Instance.clonePLayerGameObject.transform.position.z - transform.position.z;
+                LevelManager.Instance.ClonePlayerGameObject.transform.position.z - transform.position.z;
             if (zDistanceFromPlayer > 30f)
             {
                 ObjectPool.Instance.ReturnAnyPooledGameObjectToPool(gameObject);

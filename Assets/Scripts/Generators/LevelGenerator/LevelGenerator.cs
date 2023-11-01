@@ -58,7 +58,7 @@ namespace Generators.LevelGenerator
             levelManagerInstance.checkPoint1Target = levelData.checkPoint1Target;
             levelManagerInstance.checkPoint2Target = levelData.checkPoint2Target;
             levelManagerInstance.checkPoint3Target = levelData.checkPoint3Target;
-            levelManagerInstance.playerCurrentPositionInLevel = 1;
+            levelManagerInstance.PlayerCurrentPositionInLevel = 1;
         }
         
         private void TakePositionsFromMap()
@@ -99,7 +99,7 @@ namespace Generators.LevelGenerator
             clonePlayerGameObject.SetActive(true);
             clonePlayerGameObject.transform.SetAsFirstSibling();
             cineMachineVirtualCamera.Follow = clonePlayerGameObject.transform;
-            LevelManager.Instance.clonePLayerGameObject = clonePlayerGameObject;
+            LevelManager.Instance.ClonePlayerGameObject = clonePlayerGameObject;
         }
 
         private void GenerateCollectable()

@@ -135,7 +135,7 @@ namespace Controllers.PlatformControllers
 
         private void MoveCheckPointPlatform()
         {
-            switch (LevelManager.Instance.playerCurrentPositionInLevel)
+            switch (LevelManager.Instance.PlayerCurrentPositionInLevel)
             {
                 case 1:
                     if (selectedCheckPointIndex == CheckPointIndex.First)

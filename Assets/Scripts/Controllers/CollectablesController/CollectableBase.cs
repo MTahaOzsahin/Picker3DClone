@@ -31,7 +31,7 @@ namespace Controllers.CollectablesController
 
         private void Update()
         {
-            var playerCloneGameObject = LevelManager.Instance.clonePLayerGameObject;
+            var playerCloneGameObject = LevelManager.Instance.ClonePlayerGameObject;
             if (playerCloneGameObject == null) return;
             var playerCloneGameObjectPosition = playerCloneGameObject.transform.position;
             var thisTransformPosition = transform.position;
