@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cinemachine;
 using Controllers.CollectablesController;
 using Controllers.PlatformControllers;
@@ -17,7 +18,8 @@ namespace Generators.LevelGenerator
         private List<Vector3> collectablesRedPositions;
         private List<Vector3> collectablesGreenPositions;
         private List<Vector3> collectablesBluePositions;
-        
+        private Vector3[] startPositionsArray;
+
         private void OnEnable()
         {
             GameManager.Instance.OnInitializingLevel += GenerateLevel;
@@ -129,24 +131,32 @@ namespace Generators.LevelGenerator
         private void GeneratePlatform()
         {
             var platformData = currentLevelData.platformData;
-            foreach (var platform in platformData)
+            int checkPointPlatformCount = 0;
+            startPositionsArray = new Vector3[platformData.Count];
+            startPositionsArray[0] = currentLevelData.platformStartPosition;
+            for (int i = 0; i < platformData.Count; i++)
             {
-                switch (platform.platformType)
+                var selectedPlatformType = platformData[i].platformType;
+                var tempPlatformGameObject = ObjectPool.Instance.GetPooledPlatformGameObject(selectedPlatformType, transform);
+                float baseZOffset;
+                switch (selectedPlatformType)
                 {
                     case PlatformType.Normal:
-                        var platformNormalGameObject = ObjectPool.Instance.GetPooledPlatformNormalGameObject(transform);
-                        platformNormalGameObject.SetActive(true);
-                        platformNormalGameObject.transform.position = platform.position;
+                        baseZOffset = 30;
                         break;
                     case PlatformType.CheckPoint:
-                        var platformCheckPointGameObject = ObjectPool.Instance.GetPooledPlatformCheckPointGameObject(transform);
-                        platformCheckPointGameObject.SetActive(true);
-                        platformCheckPointGameObject.transform.position = platform.position;
-                        platformCheckPointGameObject.GetComponent<PlatformCheckPoint>().InitCheckPointPlatform(platform.platformCheckPointIndex);
+                        checkPointPlatformCount++;
+                        tempPlatformGameObject.GetComponent<PlatformCheckPoint>().InitCheckPointPlatform(checkPointPlatformCount);
+                        baseZOffset = 40;
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
+                tempPlatformGameObject.transform.position = startPositionsArray[i];
+                tempPlatformGameObject.SetActive(true);
+                if (i == platformData.Count - 1) break;
+                var previousPositionZ = startPositionsArray[i].z;
+                startPositionsArray[i + 1] = new Vector3(0f, 0f, previousPositionZ + baseZOffset);
             }
         }
     }

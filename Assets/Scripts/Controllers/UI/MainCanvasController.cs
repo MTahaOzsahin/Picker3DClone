@@ -131,7 +131,7 @@ namespace Controllers.UI
         private void OnNextLevelButtonClick()
         {
             LevelManager.Instance.CurrentLevel++;
-            if (LevelManager.Instance.CurrentLevel == 5)
+            if (LevelManager.Instance.CurrentLevel == 6)
             {
                 LevelManager.Instance.CurrentLevel = 1;
             }

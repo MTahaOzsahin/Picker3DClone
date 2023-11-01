@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Controllers.CollectablesController;
@@ -151,6 +152,43 @@ namespace Helpers
                 checkPointPlatform.transform.SetParent(parentGameObject);
                 pooledCheckPointPlatformsList.Remove(wantedCheckPointPlatformGameObject.First());
                 return checkPointPlatform;
+            }
+
+            return null;
+        }
+
+        public GameObject GetPooledPlatformGameObject(PlatformType selectedPlatformType, Transform parentGameObject)
+        {
+            switch (selectedPlatformType)
+            {
+                case PlatformType.Normal:
+                    if (pooledNormalPlatformsList.Count == 0) return null;
+                    var wantedNormalPlatformGameObject = pooledNormalPlatformsList.Where(x =>
+                        x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.Normal && !x.activeInHierarchy).ToList();
+                    if (wantedNormalPlatformGameObject.Count == 0) return null;
+                    var normalPlatform = wantedNormalPlatformGameObject.First();
+                    if (!normalPlatform.activeInHierarchy)
+                    {
+                        normalPlatform.transform.SetParent(parentGameObject);
+                        pooledNormalPlatformsList.Remove(wantedNormalPlatformGameObject.First());
+                        return normalPlatform;
+                    }
+                    break;
+                case PlatformType.CheckPoint:
+                    if (pooledCheckPointPlatformsList.Count == 0) return null;
+                    var wantedCheckPointPlatformGameObject = pooledCheckPointPlatformsList.Where(x =>
+                        x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.CheckPoint && !x.activeInHierarchy).ToList();
+                    if (wantedCheckPointPlatformGameObject.Count == 0) return null;
+                    var checkPointPlatform = wantedCheckPointPlatformGameObject.First();
+                    if (!checkPointPlatform.activeInHierarchy)
+                    {
+                        checkPointPlatform.transform.SetParent(parentGameObject);
+                        pooledCheckPointPlatformsList.Remove(wantedCheckPointPlatformGameObject.First());
+                        return checkPointPlatform;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(selectedPlatformType), selectedPlatformType, null);
             }
 
             return null;

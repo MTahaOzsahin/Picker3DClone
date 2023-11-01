@@ -15,6 +15,7 @@ namespace Controllers.PlatformControllers
 
         private void Update()
         {
+            if (LevelManager.Instance.ClonePlayerGameObject == null) return;
             var zDistanceFromPlayer =
                 LevelManager.Instance.ClonePlayerGameObject.transform.position.z - transform.position.z;
             if (zDistanceFromPlayer > 30f)
