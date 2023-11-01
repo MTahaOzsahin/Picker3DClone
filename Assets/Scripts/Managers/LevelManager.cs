@@ -20,7 +20,16 @@ namespace Managers
         
         public List<GameObject> playerCollectedGameObjects;
 
-        public int targetLevel;
+        [SerializeField] private int currentLevel;
+        public int CurrentLevel
+        {
+            get => currentLevel;
+            set
+            {
+                currentLevel = value;
+                SetPlayerPrefsLevel(value);
+            }
+        }
 
         [Tooltip("Which area player currently in.")]
         public int playerCurrentPositionInLevel;
@@ -33,6 +42,7 @@ namespace Managers
 
         private void Awake()
         {
+            GetPLayerPrefs();
             DOTween.SetTweensCapacity(5000,50);
             playerCollectedGameObjects = new List<GameObject>();
             selectedLevelProgress = LevelProgress.OnProgress;
@@ -59,6 +69,16 @@ namespace Managers
             GameManager.Instance.OnCheckPoint1 -= OnCheckPoint1;
             GameManager.Instance.OnCheckPoint2 -= OnCheckPoint2;
             GameManager.Instance.OnCheckPoint3 -= OnCheckPoint3;
+        }
+        
+        private void GetPLayerPrefs()
+        {
+            currentLevel = PlayerPrefs.GetInt("currentLevel",1);
+        }
+        
+        private void SetPlayerPrefsLevel(int targetLevel)
+        {
+            PlayerPrefs.SetInt("currentLevel",targetLevel);
         }
 
         private void SetPLayerCurrentPosition()

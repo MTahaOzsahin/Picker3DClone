@@ -52,7 +52,7 @@ namespace Generators.LevelGenerator
         
         private void GetLevelData()
         {
-            currentLevelData = ResourcesManager.Instance.LoadLevel(LevelManager.Instance.targetLevel);
+            currentLevelData = ResourcesManager.Instance.LoadLevel(LevelManager.Instance.CurrentLevel);
             var levelData = currentLevelData;
             var levelManagerInstance = LevelManager.Instance;
             levelManagerInstance.checkPoint1Target = levelData.checkPoint1Target;

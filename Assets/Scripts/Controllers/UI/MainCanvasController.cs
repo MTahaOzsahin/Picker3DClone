@@ -67,7 +67,7 @@ namespace Controllers.UI
         private void OnInitializingLevel()
         {
             endingPanel.SetActive(false);
-            var currentLevel = LevelManager.Instance.targetLevel;
+            var currentLevel = LevelManager.Instance.CurrentLevel;
             currentLevelText.text = currentLevel.ToString(CultureInfo.InvariantCulture);
             nextLevelText.text = (currentLevel + 1).ToString(CultureInfo.InvariantCulture);
             levelProgressFirst.color = Color.white;
@@ -130,10 +130,10 @@ namespace Controllers.UI
 
         private void OnNextLevelButtonClick()
         {
-            LevelManager.Instance.targetLevel++;
-            if (LevelManager.Instance.targetLevel == 5)
+            LevelManager.Instance.CurrentLevel++;
+            if (LevelManager.Instance.CurrentLevel == 5)
             {
-                LevelManager.Instance.targetLevel = 1;
+                LevelManager.Instance.CurrentLevel = 1;
             }
             GameManager.Instance.SelectedGameStates = GameStates.OnInitializingLevel;
             winCondition.SetActive(false);
