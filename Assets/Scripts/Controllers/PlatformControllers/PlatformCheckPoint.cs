@@ -195,6 +195,7 @@ namespace Controllers.PlatformControllers
                 if (!levelManagerInstance.playerCollectedGameObjects.Contains(other.gameObject))
                 {
                     levelManagerInstance.playerCollectedGameObjects.Add(other.gameObject);
+                    SoundManager.Instance.PlayCollectedSound();
                 }
                 if (!collectableGameObjectInPool.Contains(other.gameObject))
                 {
