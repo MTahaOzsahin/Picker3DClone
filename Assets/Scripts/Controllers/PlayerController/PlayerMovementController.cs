@@ -126,7 +126,7 @@ namespace Controllers.PlayerController
                 var smoothXTargetPosition = Vector3.Lerp(transformPosition, targetXPosition, lerpValue);
                 var targetZPosition = new Vector3(transformPosition.x, transformPosition.y, transformPosition.z + playerZMovementSpeed);
                 var smoothTargetZPosition = Vector3.Lerp(transformPosition, targetZPosition, lerpValue);
-                var targetPosition = new Vector3(smoothXTargetPosition.x, transformPosition.y, smoothTargetZPosition.z);
+                var targetPosition = new Vector3(Mathf.Clamp(smoothXTargetPosition.x,-3.3f,3.3f), transformPosition.y, smoothTargetZPosition.z);
                 mRigidbody.MovePosition(targetPosition);
             }
             else if (isGameStarted)
