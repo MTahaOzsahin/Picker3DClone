@@ -44,6 +44,13 @@ namespace Controllers.PlayerController
                 if (!collectedGameObjects.Contains(other.gameObject))
                 {
                     collectedGameObjects.Add(other.gameObject);
+                    var selectedGameState = GameManager.Instance.SelectedGameStates;
+                    if (selectedGameState == GameStates.OnCheckPoint1 ||
+                        selectedGameState == GameStates.OnCheckPoint2 ||
+                        selectedGameState == GameStates.OnCheckPoint3)
+                    {
+                        return;
+                    }
                     SoundManager.Instance.PlayCollectedSound();
                 }
             }
