@@ -1,11 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Globalization;
 using DG.Tweening;
 using Managers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 namespace Controllers.UI
 {
@@ -34,6 +36,9 @@ namespace Controllers.UI
         [Header("Ending Panels Buttons")] 
         [SerializeField] private Button nextLevelButton;
         [SerializeField] private Button restartLevelButton;
+
+        [Header("Game Panel CheckPoint Success GameObject List")] 
+        [SerializeField] private GameObject checkPointSuccessAreaGameObject;
 
         private Tweener scaleTween;
 
@@ -89,16 +94,49 @@ namespace Controllers.UI
 
         private void OnCheckPoint1Success()
         {
+            var successTextList = checkPointSuccessAreaGameObject.GetComponentsInChildren<TextMeshProUGUI>(true);
+            var randomIndex = Random.Range(0, successTextList.Length);
+            var successText = successTextList[randomIndex];
+            successText.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            successText.gameObject.SetActive(true);
+            var scaleTextTween = successText.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
+            scaleTextTween.OnComplete(() =>
+            {
+                successText.gameObject.SetActive(false);
+                scaleTextTween.Kill();
+            });
             levelProgressFirst.color = Color.green;
         }
         
         private void OnCheckPoint2Success()
         {
+            var successTextList = checkPointSuccessAreaGameObject.GetComponentsInChildren<TextMeshProUGUI>(true);
+            var randomIndex = Random.Range(0, successTextList.Length);
+            var successText = successTextList[randomIndex];
+            successText.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            successText.gameObject.SetActive(true);
+            var scaleTextTween = successText.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
+            scaleTextTween.OnComplete(() =>
+            {
+                successText.gameObject.SetActive(false);
+                scaleTextTween.Kill();
+            });
             levelProgressSecond.color = Color.green;
         }
         
         private void OnCheckPoint3Success()
         {
+            var successTextList = checkPointSuccessAreaGameObject.GetComponentsInChildren<TextMeshProUGUI>(true);
+            var randomIndex = Random.Range(0, successTextList.Length);
+            var successText = successTextList[randomIndex];
+            successText.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            successText.gameObject.SetActive(true);
+            var scaleTextTween = successText.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
+            scaleTextTween.OnComplete(() =>
+            {
+                successText.gameObject.SetActive(false);
+                scaleTextTween.Kill();
+            });
             levelProgressThird.color = Color.green;
         }
 
@@ -109,7 +147,7 @@ namespace Controllers.UI
 
         private IEnumerator EndingCoroutine()
         {
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.6f);
             endingPanel.SetActive(true);
             switch (LevelManager.Instance.selectedLevelProgress)
             {
