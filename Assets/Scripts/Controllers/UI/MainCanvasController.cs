@@ -94,50 +94,37 @@ namespace Controllers.UI
 
         private void OnCheckPoint1Success()
         {
-            var successTextList = checkPointSuccessAreaGameObject.GetComponentsInChildren<TextMeshProUGUI>(true);
-            var randomIndex = Random.Range(0, successTextList.Length);
-            var successText = successTextList[randomIndex];
-            successText.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            successText.gameObject.SetActive(true);
-            var scaleTextTween = successText.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
-            scaleTextTween.OnComplete(() =>
-            {
-                successText.gameObject.SetActive(false);
-                scaleTextTween.Kill();
-            });
+            SuccessTextHandler();
             levelProgressFirst.color = Color.green;
         }
         
+
         private void OnCheckPoint2Success()
         {
-            var successTextList = checkPointSuccessAreaGameObject.GetComponentsInChildren<TextMeshProUGUI>(true);
-            var randomIndex = Random.Range(0, successTextList.Length);
-            var successText = successTextList[randomIndex];
-            successText.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            successText.gameObject.SetActive(true);
-            var scaleTextTween = successText.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
-            scaleTextTween.OnComplete(() =>
-            {
-                successText.gameObject.SetActive(false);
-                scaleTextTween.Kill();
-            });
+            SuccessTextHandler();
             levelProgressSecond.color = Color.green;
         }
         
         private void OnCheckPoint3Success()
         {
+            SuccessTextHandler();
+            levelProgressThird.color = Color.green;
+        }
+        
+        private void SuccessTextHandler()
+        {
             var successTextList = checkPointSuccessAreaGameObject.GetComponentsInChildren<TextMeshProUGUI>(true);
             var randomIndex = Random.Range(0, successTextList.Length);
             var successText = successTextList[randomIndex];
-            successText.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-            successText.gameObject.SetActive(true);
-            var scaleTextTween = successText.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
+            var parentGameObject = successText.transform.parent;
+            parentGameObject.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+            parentGameObject.gameObject.SetActive(true);
+            var scaleTextTween = parentGameObject.transform.DOScale(new Vector3(1.2f, 1.2f, 1.2f), 0.6f);
             scaleTextTween.OnComplete(() =>
             {
-                successText.gameObject.SetActive(false);
+                parentGameObject.gameObject.SetActive(false);
                 scaleTextTween.Kill();
             });
-            levelProgressThird.color = Color.green;
         }
 
         private void OnEnding()
