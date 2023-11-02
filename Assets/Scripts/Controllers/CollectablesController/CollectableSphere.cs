@@ -4,6 +4,6 @@ namespace Controllers.CollectablesController
 {
     public class CollectableSphere : CollectableBase
     {
-    
+        //
     }
 }

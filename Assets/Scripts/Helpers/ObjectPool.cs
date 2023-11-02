@@ -38,6 +38,8 @@ namespace Helpers
         [HideInInspector] public List<GameObject> pooledCheckPointPlatformsList;
         [HideInInspector] public List<GameObject> pooledPlayerList;
 
+        private Vector3 collectablesOriginScale;
+
 
         private void OnEnable()
         {
@@ -71,6 +73,7 @@ namespace Helpers
                         var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
                         tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
                         pooledCollectablesList.Add(tempCollectableGameObject);
+                        collectablesOriginScale = tempCollectableGameObject.transform.localScale;
                     }
                 }
             }
@@ -116,7 +119,7 @@ namespace Helpers
             if(!collectableGameObject.activeInHierarchy)
             {
                 collectableGameObject.transform.SetParent(parentGameObject);
-                collectableGameObject.transform.localScale = new Vector3(0.6f, 0.6f, 0.6f);
+                collectableGameObject.transform.localScale = collectablesOriginScale;
                 pooledCollectablesList.Remove(collectableGameObject);
                 return collectableGameObject;
             }
