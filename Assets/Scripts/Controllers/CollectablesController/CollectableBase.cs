@@ -14,7 +14,7 @@ namespace Controllers.CollectablesController
     {
         public CollectableType selectedCollectableType;
 
-        [Header("Push strength"),Range(1f,500f)] 
+        [Header("Push strength"),Range(100f,1000f)] 
         [SerializeField] private float pushStrength;
         
         private Rigidbody mRigidbody;

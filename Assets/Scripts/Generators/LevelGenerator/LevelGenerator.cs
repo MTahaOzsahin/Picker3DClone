@@ -34,6 +34,7 @@ namespace Generators.LevelGenerator
         {
             DestroyCurrentLevel();
             GetLevelData();
+            // TakePositionsFromMap();
             TakePositionsFromMap();
             GeneratePlatform();
             GenerateCollectable();
@@ -61,7 +62,7 @@ namespace Generators.LevelGenerator
             levelManagerInstance.checkPoint3Target = levelData.checkPoint3Target;
             levelManagerInstance.PlayerCurrentPositionInLevel = 1;
         }
-        
+
         private void TakePositionsFromMap()
         {
             collectablesRedPositions = new List<Vector3>();
@@ -73,7 +74,7 @@ namespace Generators.LevelGenerator
                 for (int y = 0; y < levelMapPlatform.height; y++)
                 {
                     var pixelColor = levelMapPlatform.GetPixel(x, y);
-                    var adjustedPosition = new Vector3(x - 4, 0.75f, y - 25);
+                    var adjustedPosition = new Vector3(x/2f - 4.5f, 0.75f, y - 25);
                     if (pixelColor == Color.red)
                     {
                         collectablesRedPositions.Add(adjustedPosition);
