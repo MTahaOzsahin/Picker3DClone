@@ -45,6 +45,7 @@ namespace Controllers.PlayerController
                 if (!collectedGameObjects.Contains(other.gameObject))
                 {
                     collectedGameObjects.Add(other.gameObject);
+                    SoundManager.Instance.PlayCollectedSound();
                 }
             }
         }
