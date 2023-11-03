@@ -15,9 +15,9 @@ MonoBehaviour:
   playerStartPosition: {x: 0, y: 0, z: -20}
   platformStartPosition: {x: 0, y: 0, z: 0}
   levelIndex: 9
-  checkPoint1Target: 5
-  checkPoint2Target: 5
-  checkPoint3Target: 5
+  checkPoint1Target: 40
+  checkPoint2Target: 40
+  checkPoint3Target: 40
   collectablesCoordinateTexture: {fileID: 2800000, guid: 06b09da074ae4ee4f80233926160b29f, type: 3}
   platformData:
   - platformType: 0

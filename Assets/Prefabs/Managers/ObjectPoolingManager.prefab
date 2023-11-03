@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3810006627288153558
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3810006627288153552}
+  - component: {fileID: 3810006627288153559}
+  m_Layer: 0
+  m_Name: ObjectPoolingManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3810006627288153552
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3810006627288153558}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3810006627288153559
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3810006627288153558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 710b75b7c767e9a45a200344f4bb856b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  collectableSpherePrefabToPooled: {fileID: 6524127249825212748, guid: 9467b1149e7d9df4e90da2242110a246, type: 3}
+  collectableCubePrefabToPooled: {fileID: 3653443610761514856, guid: a91a531ab39342b4988f0d5d2932262c, type: 3}
+  collectableCapsulePrefabToPooled: {fileID: 6710589986937934796, guid: f81c0e90f8ebafb48968227d5c0d771c, type: 3}
+  targetQuantityForCollectables: 1000
+  platformNormalPrefabToPooled: {fileID: 4283554735435460999, guid: 26ed5df3c1448134b8ce3fbf35ee1716, type: 3}
+  platformCheckPointPrefabToPooled: {fileID: 8828402000086752095, guid: dbe9a649fe817bb4e849a11732895776, type: 3}
+  targetQuantityForPlatforms: 50
+  playerPrefabToPooled: {fileID: 6425322576173646119, guid: 99f2ea9428806cd40904305772847d79, type: 3}
+  targetQuantityForPlayer: 2

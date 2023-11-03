@@ -34,7 +34,6 @@ namespace Generators.LevelGenerator
         {
             DestroyCurrentLevel();
             GetLevelData();
-            // TakePositionsFromMap();
             TakePositionsFromMap();
             GeneratePlatform();
             GenerateCollectable();

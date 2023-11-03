@@ -4,7 +4,6 @@ using System.Linq;
 using Controllers.CollectablesController;
 using Controllers.PlatformControllers;
 using Controllers.PlayerController;
-using DG.Tweening;
 using Managers;
 using UnityEngine;
 
@@ -12,8 +11,10 @@ namespace Helpers
 {
     public class ObjectPool : SingletonMB<ObjectPool>
     {
-        [Header("Collectables Prefabs"), Tooltip("Place any collectable to instantiate")]
-        [SerializeField] private List<GameObject> collectablePrefabsToPooled;
+        [Header("Collectables Prefabs")]
+        [SerializeField] private GameObject collectableSpherePrefabToPooled;
+        [SerializeField] private GameObject collectableCubePrefabToPooled;
+        [SerializeField] private GameObject collectableCapsulePrefabToPooled;
         
         [Header("How many collectables wanted to be pooled. Will be for each")]
         public int targetQuantityForCollectables;
@@ -33,10 +34,13 @@ namespace Helpers
         [Header("How many player wanted to be pooled")]
         public int targetQuantityForPlayer;
         
-        [HideInInspector] public List<GameObject> pooledCollectablesList;
-        [HideInInspector] public List<GameObject> pooledNormalPlatformsList;
-        [HideInInspector] public List<GameObject> pooledCheckPointPlatformsList;
-        [HideInInspector] public List<GameObject> pooledPlayerList;
+        private Queue<GameObject> pooledCollectableSphereQueue;
+        private Queue<GameObject> pooledCollectableCubeQueue;
+        private Queue<GameObject> pooledCollectableCapsuleQueue;
+        private Queue<GameObject> pooledNormalPlatformsQueue; 
+        private Queue<GameObject> pooledCheckPointPlatformsQueue; 
+        private Queue<GameObject> pooledPlayerQueue;
+        
 
         private Vector3 collectablesOriginScale;
 
@@ -53,32 +57,57 @@ namespace Helpers
 
         private void Awake()
         {
-            pooledCollectablesList = new List<GameObject>();
-            pooledNormalPlatformsList = new List<GameObject>();
-            pooledCheckPointPlatformsList = new List<GameObject>();
-            pooledPlayerList = new List<GameObject>();
+            pooledCollectableCapsuleQueue = new Queue<GameObject>();
+            pooledCollectableCubeQueue = new Queue<GameObject>();
+            pooledCollectableSphereQueue = new Queue<GameObject>();
+            pooledNormalPlatformsQueue = new Queue<GameObject>();
+            pooledCheckPointPlatformsQueue = new Queue<GameObject>();
+            pooledPlayerQueue = new Queue<GameObject>();
         }
 
 
         private void InitPools()
         {
-            if (pooledCollectablesList.Count == 0)
+            if (pooledCollectableSphereQueue.Count == 0)
             {
                 for (int i = 0; i < targetQuantityForCollectables; i++)
                 {
-                    foreach (var t in collectablePrefabsToPooled)
-                    {
-                        var tempCollectableGameObject = Instantiate(t,transform);
-                        tempCollectableGameObject.SetActive(false);
-                        var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
-                        tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
-                        pooledCollectablesList.Add(tempCollectableGameObject);
-                        collectablesOriginScale = tempCollectableGameObject.transform.localScale;
-                    }
+                    var tempCollectableGameObject = Instantiate(collectableSpherePrefabToPooled,transform);
+                    tempCollectableGameObject.SetActive(false);
+                    var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
+                    tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
+                    pooledCollectableSphereQueue.Enqueue(tempCollectableGameObject);
+                    collectablesOriginScale = tempCollectableGameObject.transform.localScale;
+                }
+            }
+            
+            if (pooledCollectableCubeQueue.Count == 0)
+            {
+                for (int i = 0; i < targetQuantityForCollectables; i++)
+                {
+                    var tempCollectableGameObject = Instantiate(collectableCubePrefabToPooled,transform);
+                    tempCollectableGameObject.SetActive(false);
+                    var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
+                    tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
+                    pooledCollectableCubeQueue.Enqueue(tempCollectableGameObject);
+                    collectablesOriginScale = tempCollectableGameObject.transform.localScale;
+                }
+            }
+            
+            if (pooledCollectableCapsuleQueue.Count == 0)
+            {
+                for (int i = 0; i < targetQuantityForCollectables; i++)
+                {
+                    var tempCollectableGameObject = Instantiate(collectableCapsulePrefabToPooled,transform);
+                    tempCollectableGameObject.SetActive(false);
+                    var collectableGameObjectType = tempCollectableGameObject.GetComponent<CollectableBase>().selectedCollectableType;
+                    tempCollectableGameObject.name = collectableGameObjectType + $"{i + 1}";
+                    pooledCollectableCapsuleQueue.Enqueue(tempCollectableGameObject);
+                    collectablesOriginScale = tempCollectableGameObject.transform.localScale;
                 }
             }
 
-            if (pooledNormalPlatformsList.Count == 0)
+            if (pooledNormalPlatformsQueue.Count == 0)
             {
                 for (int i = 0; i < targetQuantityForPlatforms; i++)
                 {
@@ -86,23 +115,23 @@ namespace Helpers
                     tempPlatformNormalGameObject.SetActive(false);
                     var platformNormalGameObjectType = tempPlatformNormalGameObject.GetComponent<PlatformBase>().selectedPlatformType;
                     tempPlatformNormalGameObject.name = platformNormalGameObjectType + $"{i + 1}";
-                    pooledNormalPlatformsList.Add(tempPlatformNormalGameObject);
+                    pooledNormalPlatformsQueue.Enqueue(tempPlatformNormalGameObject);
                 
                     var tempPlatformCheckPointGameObject = Instantiate(platformCheckPointPrefabToPooled, transform);
                     tempPlatformCheckPointGameObject.SetActive(false);
                     var platformCheckPointGameObjectType = tempPlatformCheckPointGameObject.GetComponent<PlatformBase>().selectedPlatformType;
                     tempPlatformCheckPointGameObject.name = platformCheckPointGameObjectType + $"{i + 1}";
-                    pooledCheckPointPlatformsList.Add(tempPlatformCheckPointGameObject);
+                    pooledCheckPointPlatformsQueue.Enqueue(tempPlatformCheckPointGameObject);
                 }
             }
 
-            if (pooledPlayerList.Count == 0)
+            if (pooledPlayerQueue.Count == 0)
             {
                 for (int i = 0; i < targetQuantityForPlayer; i++)
                 {
                     var tempPlayerGameObject = Instantiate(playerPrefabToPooled, transform);
                     tempPlayerGameObject.SetActive(false);
-                    pooledPlayerList.Add(tempPlayerGameObject);
+                    pooledPlayerQueue.Enqueue(tempPlayerGameObject);
                 }
             }
             
@@ -111,100 +140,87 @@ namespace Helpers
         
         public GameObject GetPooledCollectableGameObject(CollectableType selectedCollectableType,Transform parentGameObject)
         {
-            if (pooledCollectablesList.Count == 0) return null;
-            var pooledCollectableWantedTypeList = pooledCollectablesList.Where(x =>
-                x.GetComponent<CollectableBase>().selectedCollectableType == selectedCollectableType).ToList();
-            if (pooledCollectableWantedTypeList.Count == 0) return null;
-            var collectableGameObject = pooledCollectableWantedTypeList.First();
-            if(!collectableGameObject.activeInHierarchy)
+            switch (selectedCollectableType)
             {
-                collectableGameObject.transform.SetParent(parentGameObject);
-                collectableGameObject.transform.localScale = collectablesOriginScale;
-                pooledCollectablesList.Remove(collectableGameObject);
-                return collectableGameObject;
+                case CollectableType.Sphere:
+                    if (pooledCollectableSphereQueue.Count == 0) return null;
+                    var collectableSphereGameObject = pooledCollectableSphereQueue.First();
+                    if(!collectableSphereGameObject.activeInHierarchy)
+                    {
+                        collectableSphereGameObject.transform.SetParent(parentGameObject);
+                        collectableSphereGameObject.transform.localScale = collectablesOriginScale;
+                        pooledCollectableSphereQueue.Dequeue();
+                        return collectableSphereGameObject;
+                    }
+                    break;
+                case CollectableType.Cube:
+                    if (pooledCollectableCubeQueue.Count == 0) return null;
+                    var collectableCubeGameObject = pooledCollectableCubeQueue.First();
+                    if(!collectableCubeGameObject.activeInHierarchy)
+                    {
+                        collectableCubeGameObject.transform.SetParent(parentGameObject);
+                        collectableCubeGameObject.transform.localScale = collectablesOriginScale;
+                        pooledCollectableCubeQueue.Dequeue();
+                        return collectableCubeGameObject;
+                    }
+                    break;
+                case CollectableType.Capsule:
+                    if (pooledCollectableCapsuleQueue.Count == 0) return null;
+                    var collectableCapsuleGameObject = pooledCollectableCapsuleQueue.First();
+                    if(!collectableCapsuleGameObject.activeInHierarchy)
+                    {
+                        collectableCapsuleGameObject.transform.SetParent(parentGameObject);
+                        collectableCapsuleGameObject.transform.localScale = collectablesOriginScale;
+                        pooledCollectableCapsuleQueue.Dequeue();
+                        return collectableCapsuleGameObject;
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(selectedCollectableType), selectedCollectableType, null);
             }
+           
             return null;
         }
         
-        public GameObject GetPooledPlatformNormalGameObject(Transform parentGameObject)
-        {
-            if (pooledNormalPlatformsList.Count == 0) return null;
-            var wantedNormalPlatformGameObject = pooledNormalPlatformsList.Where(x =>
-                x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.Normal && !x.activeInHierarchy).ToList();
-            if (wantedNormalPlatformGameObject.Count == 0) return null;
-            var normalPlatform = wantedNormalPlatformGameObject.First();
-            if (!normalPlatform.activeInHierarchy)
-            {
-                normalPlatform.transform.SetParent(parentGameObject);
-                pooledNormalPlatformsList.Remove(wantedNormalPlatformGameObject.First());
-                return normalPlatform;
-            }
-
-            return null;
-        }
-        
-        public GameObject GetPooledPlatformCheckPointGameObject(Transform parentGameObject)
-        {
-            if (pooledCheckPointPlatformsList.Count == 0) return null;
-            var wantedCheckPointPlatformGameObject = pooledCheckPointPlatformsList.Where(x =>
-                x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.CheckPoint && !x.activeInHierarchy).ToList();
-            if (wantedCheckPointPlatformGameObject.Count == 0) return null;
-            var checkPointPlatform = wantedCheckPointPlatformGameObject.First();
-            if (!checkPointPlatform.activeInHierarchy)
-            {
-                checkPointPlatform.transform.SetParent(parentGameObject);
-                pooledCheckPointPlatformsList.Remove(wantedCheckPointPlatformGameObject.First());
-                return checkPointPlatform;
-            }
-
-            return null;
-        }
 
         public GameObject GetPooledPlatformGameObject(PlatformType selectedPlatformType, Transform parentGameObject)
         {
             switch (selectedPlatformType)
             {
                 case PlatformType.Normal:
-                    if (pooledNormalPlatformsList.Count == 0) return null;
-                    var wantedNormalPlatformGameObject = pooledNormalPlatformsList.Where(x =>
-                        x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.Normal && !x.activeInHierarchy).ToList();
-                    if (wantedNormalPlatformGameObject.Count == 0) return null;
-                    var normalPlatform = wantedNormalPlatformGameObject.First();
+                    if (pooledNormalPlatformsQueue.Count == 0) return null;
+                    var normalPlatform = pooledNormalPlatformsQueue.First();
                     if (!normalPlatform.activeInHierarchy)
                     {
                         normalPlatform.transform.SetParent(parentGameObject);
-                        pooledNormalPlatformsList.Remove(wantedNormalPlatformGameObject.First());
+                        pooledNormalPlatformsQueue.Dequeue();
                         return normalPlatform;
                     }
                     break;
                 case PlatformType.CheckPoint:
-                    if (pooledCheckPointPlatformsList.Count == 0) return null;
-                    var wantedCheckPointPlatformGameObject = pooledCheckPointPlatformsList.Where(x =>
-                        x.GetComponent<PlatformBase>().selectedPlatformType == PlatformType.CheckPoint && !x.activeInHierarchy).ToList();
-                    if (wantedCheckPointPlatformGameObject.Count == 0) return null;
-                    var checkPointPlatform = wantedCheckPointPlatformGameObject.First();
+                    if (pooledCheckPointPlatformsQueue.Count == 0) return null;
+                    var checkPointPlatform = pooledCheckPointPlatformsQueue.First();
                     if (!checkPointPlatform.activeInHierarchy)
                     {
                         checkPointPlatform.transform.SetParent(parentGameObject);
-                        pooledCheckPointPlatformsList.Remove(wantedCheckPointPlatformGameObject.First());
+                        pooledCheckPointPlatformsQueue.Dequeue();
                         return checkPointPlatform;
                     }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(selectedPlatformType), selectedPlatformType, null);
             }
-
             return null;
         }
 
         public GameObject GetPooledPlayerGameObject(Transform parentGameObject)
         {
-            if (pooledPlayerList.Count == 0) return null;
-            var playerGameObject = pooledPlayerList.First();
+            if (pooledPlayerQueue.Count == 0) return null;
+            var playerGameObject = pooledPlayerQueue.First();
             if (!playerGameObject.activeInHierarchy)
             {
                 playerGameObject.transform.SetParent(parentGameObject);
-                pooledPlayerList.Remove(playerGameObject);
+                pooledPlayerQueue.Dequeue();
                 return playerGameObject;
             }
 
@@ -213,96 +229,99 @@ namespace Helpers
 
         public void ReturnAnyPooledGameObjectToPool(GameObject pooledGameObject)
         {
-            var originScaleValue = pooledGameObject.transform.localScale;
-            var scaleTween = pooledGameObject.transform.DOScale(new Vector3(0.1f, 0.1f, 0.1f), 0.5f).SetEase(Ease.Linear);
-            DisableAllCollidersAndRigidBody(pooledGameObject);
+            HandleColliderRigidBody(pooledGameObject);
+            pooledGameObject.SetActive(false);
             pooledGameObject.transform.SetParent(transform);
-            scaleTween.OnComplete(() =>
+            if (pooledGameObject.GetComponent<CollectableBase>() != null)
             {
-                pooledGameObject.SetActive(false);
-                if (pooledGameObject.GetComponent<CollectableBase>() != null)
+                var pooledGameObjectBase = pooledGameObject.GetComponent<CollectableBase>();
+                switch (pooledGameObjectBase.selectedCollectableType)
                 {
-                    if (pooledCollectablesList.Contains(pooledGameObject)) return;
-                    pooledCollectablesList.Add(pooledGameObject);
+                    case CollectableType.Sphere:
+                        if (pooledCollectableSphereQueue.Contains(pooledGameObject)) return;
+                        pooledCollectableSphereQueue.Enqueue(pooledGameObject);
+                        break;
+                    case CollectableType.Cube:
+                        if (pooledCollectableCubeQueue.Contains(pooledGameObject)) return;
+                        pooledCollectableCubeQueue.Enqueue(pooledGameObject);
+                        break;
+                    case CollectableType.Capsule:
+                        if (pooledCollectableCapsuleQueue.Contains(pooledGameObject)) return;
+                        pooledCollectableCapsuleQueue.Enqueue(pooledGameObject);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                else if (pooledGameObject.GetComponent<PlatformNormal>() != null)
-                {
-                    if (pooledNormalPlatformsList.Contains(pooledGameObject)) return;
-                    pooledNormalPlatformsList.Add(pooledGameObject);
-                }
-                else if (pooledGameObject.GetComponent<PlatformCheckPoint>() != null)
-                {
-                    if (pooledCheckPointPlatformsList.Contains(pooledGameObject)) return;
-                    pooledCheckPointPlatformsList.Add(pooledGameObject);
-                }
-                else if (pooledGameObject.GetComponent<PlayerMovementController>() != null)
-                {
-                    if (pooledPlayerList.Contains(pooledGameObject)) return;
-                    pooledPlayerList.Add(pooledGameObject);
-                }
-                pooledGameObject.transform.localScale = originScaleValue;
-               EnableAllCollidersAndRigidBody(pooledGameObject);
-                scaleTween.Kill();
-            });
+            }
+            else if (pooledGameObject.GetComponent<PlatformNormal>() != null)
+            {
+                if (pooledNormalPlatformsQueue.Contains(pooledGameObject)) return;
+                pooledNormalPlatformsQueue.Enqueue(pooledGameObject);
+            }
+            else if (pooledGameObject.GetComponent<PlatformCheckPoint>() != null)
+            {
+                if (pooledCheckPointPlatformsQueue.Contains(pooledGameObject)) return;
+                pooledCheckPointPlatformsQueue.Enqueue(pooledGameObject);
+            }
+            else if (pooledGameObject.GetComponent<PlayerMovementController>() != null)
+            {
+                if (pooledPlayerQueue.Contains(pooledGameObject)) return;
+                pooledPlayerQueue.Enqueue(pooledGameObject);
+            }
         }
 
-        private void DisableAllCollidersAndRigidBody(GameObject pooledGameObject)
+        private void HandleColliderRigidBody(GameObject pooledGameObject)
         {
-             var allColliders = pooledGameObject.GetComponents<BoxCollider>();
-            foreach (var boxCollider in allColliders)
-            {
-                boxCollider.enabled = false;
-            }
-
+            pooledGameObject.transform.position = new Vector3(0f, -50f, 100f);
+            pooledGameObject.transform.rotation = Quaternion.Euler(Vector3.zero);
             var mRigidBody = pooledGameObject.GetComponent<Rigidbody>();
             mRigidBody.velocity = Vector3.zero;
             mRigidBody.angularVelocity = Vector3.zero;
-            mRigidBody.isKinematic = false;
-        }
-        
-        private void EnableAllCollidersAndRigidBody(GameObject pooledGameObject)
-        {
-            var allColliders = pooledGameObject.GetComponents<BoxCollider>();
-            foreach (var boxCollider in allColliders)
-            {
-                boxCollider.enabled = false;
-            }
-
-            var mRigidBody = pooledGameObject.GetComponent<Rigidbody>();
-            mRigidBody.isKinematic = false;
         }
 
         public void DestroyRemainPooledObjects()
         {
-            if (pooledCollectablesList.Count == 0) return;
-            foreach (var pooledGameObject in pooledCollectablesList)
+            if (pooledCollectableSphereQueue.Count == 0) return;
+            foreach (var pooledGameObject in pooledCollectableSphereQueue)
             {
                 Destroy(pooledGameObject);
             }
-            pooledCollectablesList.Clear();
+            pooledCollectableSphereQueue.Clear();
             
-            if (pooledNormalPlatformsList.Count == 0) return;
-            foreach (var pooledGameObject in pooledNormalPlatformsList)
+            if (pooledCollectableCubeQueue.Count == 0) return;
+            foreach (var pooledGameObject in pooledCollectableCubeQueue)
             {
                 Destroy(pooledGameObject);
             }
-            pooledNormalPlatformsList.Clear();
+            pooledCollectableCubeQueue.Clear();
             
-            if (pooledCheckPointPlatformsList.Count == 0) return;
-            foreach (var pooledGameObject in pooledCheckPointPlatformsList)
+            if (pooledCollectableCapsuleQueue.Count == 0) return;
+            foreach (var pooledGameObject in pooledCollectableCapsuleQueue)
             {
                 Destroy(pooledGameObject);
             }
-            pooledCheckPointPlatformsList.Clear();
+            pooledCollectableCapsuleQueue.Clear();
             
-            if (pooledPlayerList.Count == 0) return;
-            foreach (var pooledGameObject in pooledPlayerList)
+            if (pooledNormalPlatformsQueue.Count == 0) return;
+            foreach (var pooledGameObject in pooledNormalPlatformsQueue)
             {
                 Destroy(pooledGameObject);
             }
-            pooledPlayerList.Clear();
+            pooledNormalPlatformsQueue.Clear();
+            
+            if (pooledCheckPointPlatformsQueue.Count == 0) return;
+            foreach (var pooledGameObject in pooledCheckPointPlatformsQueue)
+            {
+                Destroy(pooledGameObject);
+            }
+            pooledCheckPointPlatformsQueue.Clear();
+            
+            if (pooledPlayerQueue.Count == 0) return;
+            foreach (var pooledGameObject in pooledPlayerQueue)
+            {
+                Destroy(pooledGameObject);
+            }
+            pooledPlayerQueue.Clear();
         }
-
-        
     }
 }

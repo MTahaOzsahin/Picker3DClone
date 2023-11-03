@@ -13,27 +13,16 @@ MonoBehaviour:
   m_Name: LevelData2
   m_EditorClassIdentifier: 
   playerStartPosition: {x: 0, y: 1, z: -20}
+  platformStartPosition: {x: 0, y: 0, z: 0}
   levelIndex: 1
-  checkPoint1Target: 30
-  checkPoint2Target: 30
-  checkPoint3Target: 30
+  checkPoint1Target: 25
+  checkPoint2Target: 70
+  checkPoint3Target: 60
   collectablesCoordinateTexture: {fileID: 2800000, guid: 3b1156a555e30344ca9dce54c488cc1f, type: 3}
   platformData:
-  - position: {x: 0, y: 0, z: 0}
-    platformType: 0
-    platformCheckPointIndex: 0
-  - position: {x: 0, y: 0, z: 30}
-    platformType: 1
-    platformCheckPointIndex: 1
-  - position: {x: 0, y: 0, z: 70}
-    platformType: 0
-    platformCheckPointIndex: 0
-  - position: {x: 0, y: 0, z: 100}
-    platformType: 1
-    platformCheckPointIndex: 2
-  - position: {x: 0, y: 0, z: 140}
-    platformType: 0
-    platformCheckPointIndex: 0
-  - position: {x: 0, y: 0, z: 170}
-    platformType: 1
-    platformCheckPointIndex: 3
+  - platformType: 0
+  - platformType: 1
+  - platformType: 0
+  - platformType: 1
+  - platformType: 0
+  - platformType: 1
